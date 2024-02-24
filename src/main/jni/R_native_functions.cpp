@@ -73,6 +73,49 @@ Java_edu_spl_R_toStr( JNIEnv *env, jobject obj, jlong low, jlong high, jint prec
 	return env->NewStringUTF( p );
 }
 
+JNIEXPORT jlong JNICALL
+Java_edu_spl_R_toLong( JNIEnv *env, jobject obj, jlong low, jlong high ){
+	R v = RF::fromDataInt64( low, high );
+	return (jlong)v;
+}
+
+JNIEXPORT jdouble JNICALL
+Java_edu_spl_R_toDouble( JNIEnv *env, jobject obj, jlong low, jlong high ){
+	R v = RF::fromDataInt64( low, high );
+	return (jdouble)v;
+}
+
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_initConstant( JNIEnv *env, jobject obj, jint value ){
+	R v;
+	switch( value ){
+		case 0:		v = RF::M_E;		break;
+		case 1:		v = RF::M_1_LN2;	break;
+		case 2:		v = RF::M_1_LN10;	break;
+		case 3:		v = RF::M_LN2;		break;
+		case 4:		v = RF::M_LN10;		break;
+		case 5:		v = RF::M_PI;		break;
+		case 6:		v = RF::M_PI_2;		break;
+		case 7:		v = RF::M_PI_4;		break;
+		case 8:		v = RF::M_1_PI;		break;
+		case 9:		v = RF::M_2_PI;		break;
+		case 10:	v = RF::M_2_SQRTPI;	break;
+		case 11:	v = RF::M_SQRT2;	break;
+		case 12:	v = RF::M_1_SQRT2;	break;
+		default:	v = 0;
+	}
+	int64_t low, high;
+	RF::toDataInt64( v, low, high );
+
+	jlong outCArray[] = { low, high };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 2 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
+	return outJNIArray;
+}
+
 #ifdef __cplusplus
 }
 #endif

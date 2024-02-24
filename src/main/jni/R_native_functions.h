@@ -21,6 +21,8 @@ JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_initWithDouble( JNIEnv *env, jobject
 JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_initWithLong( JNIEnv *env, jobject obj, jlong value );
 JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_initWithString( JNIEnv *env, jobject obj, jstring value );
 JNIEXPORT jstring		JNICALL Java_edu_spl_R_toStr( JNIEnv *env, jobject obj, jlong low, jlong high, jint prec );
+JNIEXPORT jlong			JNICALL Java_edu_spl_R_toLong( JNIEnv *env, jobject obj, jlong low, jlong high );
+JNIEXPORT jdouble		JNICALL Java_edu_spl_R_toDouble( JNIEnv *env, jobject obj, jlong low, jlong high );
 
 #ifdef __cplusplus
 }
