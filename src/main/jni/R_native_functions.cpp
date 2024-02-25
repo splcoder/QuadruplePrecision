@@ -4,21 +4,6 @@
 extern "C" {
 #endif
 
-JNIEXPORT void JNICALL
-Java_edu_spl_R_print( JNIEnv *env, jobject obj ){
-	printf("Hello From C++ World!\n");
-	R a = 12, b = 7;
-	R c = a + b;
-	char buf[128];
-	R r = expq( c );
-
-	int n = quadmath_snprintf( buf, sizeof buf, "%+-#46.*Qe", 30, r );
-    if( (size_t) n < sizeof buf )   printf( "QUAD: %s\n", buf );
-
-	printf("-> Ended.\n");
-	return;
-}
-
 JNIEXPORT jlongArray JNICALL
 Java_edu_spl_R_initWithDouble( JNIEnv *env, jobject obj, jdouble value ){
 	R v = value;
@@ -89,6 +74,13 @@ JNIEXPORT jlongArray JNICALL
 Java_edu_spl_R_initConstant( JNIEnv *env, jobject obj, jint value ){
 	R v;
 	switch( value ){
+		case -6:	v = RF::NAN;		break;
+		//case -5:	v = RF::INF_P;		break;			//  +2.306323558737156172766198381637374e+34	<<< tan( PI/2 )
+		//case -4:	v = RF::INF_N;		break;
+		case -3:	v = RF::MAX;		break;
+		case -2:	v = RF::MIN;		break;
+		case -1:	v = RF::PRECISION;	break;
+		// Math constants ---------------------------
 		case 0:		v = RF::M_E;		break;
 		case 1:		v = RF::M_1_LN2;	break;
 		case 2:		v = RF::M_1_LN10;	break;
@@ -104,6 +96,113 @@ Java_edu_spl_R_initConstant( JNIEnv *env, jobject obj, jint value ){
 		case 12:	v = RF::M_1_SQRT2;	break;
 		default:	v = 0;
 	}
+	int64_t low, high;
+	RF::toDataInt64( v, low, high );
+
+	jlong outCArray[] = { low, high };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 2 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
+	return outJNIArray;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_edu_spl_R_areEquals( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong rLow, jlong rHigh ){
+	R lv = RF::fromDataInt64( lLow, lHigh ), rv = RF::fromDataInt64( rLow, rHigh );
+	return (jboolean)RF::areEquals( lv, rv );
+}
+
+JNIEXPORT jint JNICALL
+Java_edu_spl_R_compare( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong rLow, jlong rHigh ){
+	R lv = RF::fromDataInt64( lLow, lHigh ), rv = RF::fromDataInt64( rLow, rHigh );
+	R dif = lv - rv;
+	if( dif < 0 )	return -1;
+	if( dif > 0 )	return 1;
+	return 0;
+}
+
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_operation( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong rLow, jlong rHigh, jint ope ){
+	R lv = RF::fromDataInt64( lLow, lHigh ), rv = RF::fromDataInt64( rLow, rHigh );
+	R v;
+	switch( ope ){
+		case 0: v = lv + rv;	break;
+		case 1: v = lv - rv;	break;
+		case 2: v = lv * rv;	break;
+		case 3: v = lv / rv;	break;
+		default: v = 0;
+	}
+	int64_t low, high;
+	RF::toDataInt64( v, low, high );
+
+	jlong outCArray[] = { low, high };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 2 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
+	return outJNIArray;
+}
+
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_operation2( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jdouble right, jint ope ){
+	R lv = RF::fromDataInt64( lLow, lHigh ), rv = right;
+	R v;
+	switch( ope ){
+    		case 0: v = lv + rv;	break;
+    		case 1: v = lv - rv;	break;
+    		case 2: v = lv * rv;	break;
+    		case 3: v = lv / rv;	break;
+    		default: v = 0;
+    	}
+	int64_t low, high;
+	RF::toDataInt64( v, low, high );
+
+	jlong outCArray[] = { low, high };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 2 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
+	return outJNIArray;
+}
+
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_operation3( JNIEnv *env, jobject obj, jdouble left, jlong rLow, jlong rHigh, jint ope ){
+	R lv = left, rv = RF::fromDataInt64( rLow, rHigh );
+	R v;
+	switch( ope ){
+    		case 0: v = lv + rv;	break;
+    		case 1: v = lv - rv;	break;
+    		case 2: v = lv * rv;	break;
+    		case 3: v = lv / rv;	break;
+    		default: v = 0;
+    	}
+	int64_t low, high;
+	RF::toDataInt64( v, low, high );
+
+	jlong outCArray[] = { low, high };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 2 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
+	return outJNIArray;
+}
+
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_operation4( JNIEnv *env, jobject obj, jdouble left, jdouble right, jint ope ){
+	R lv = left, rv = right;
+	R v;
+	switch( ope ){
+    		case 0: v = lv + rv;	break;
+    		case 1: v = lv - rv;	break;
+    		case 2: v = lv * rv;	break;
+    		case 3: v = lv / rv;	break;
+    		default: v = 0;
+    	}
 	int64_t low, high;
 	RF::toDataInt64( v, low, high );
 

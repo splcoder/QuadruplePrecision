@@ -16,13 +16,19 @@ extern "C" {
 // https://www3.ntu.edu.sg/home/ehchua/programming/java/javanativeinterface.html
 // https://www.baeldung.com/jni
 
-JNIEXPORT void			JNICALL Java_edu_spl_R_print( JNIEnv *env, jobject obj );
 JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_initWithDouble( JNIEnv *env, jobject obj, jdouble value );
 JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_initWithLong( JNIEnv *env, jobject obj, jlong value );
 JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_initWithString( JNIEnv *env, jobject obj, jstring value );
 JNIEXPORT jstring		JNICALL Java_edu_spl_R_toStr( JNIEnv *env, jobject obj, jlong low, jlong high, jint prec );
 JNIEXPORT jlong			JNICALL Java_edu_spl_R_toLong( JNIEnv *env, jobject obj, jlong low, jlong high );
 JNIEXPORT jdouble		JNICALL Java_edu_spl_R_toDouble( JNIEnv *env, jobject obj, jlong low, jlong high );
+JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_initConstant( JNIEnv *env, jobject obj, jint value );
+JNIEXPORT jboolean		JNICALL Java_edu_spl_R_areEquals( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong rLow, jlong rHigh );
+JNIEXPORT jint			JNICALL Java_edu_spl_R_compare( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong rLow, jlong rHigh );
+JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_operation( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong rLow, jlong rHigh, jint ope );
+JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_operation2( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jdouble right, jint ope );
+JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_operation3( JNIEnv *env, jobject obj, jdouble left, jlong rLow, jlong rHigh, jint ope );
+JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_operation4( JNIEnv *env, jobject obj, jdouble left, jdouble right, jint ope );
 
 #ifdef __cplusplus
 }
