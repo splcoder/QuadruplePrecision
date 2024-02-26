@@ -151,12 +151,12 @@ Java_edu_spl_R_operation2( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jd
 	R lv = RF::fromDataInt64( lLow, lHigh ), rv = right;
 	R v;
 	switch( ope ){
-    		case 0: v = lv + rv;	break;
-    		case 1: v = lv - rv;	break;
-    		case 2: v = lv * rv;	break;
-    		case 3: v = lv / rv;	break;
-    		default: v = 0;
-    	}
+		case 0: v = lv + rv;	break;
+		case 1: v = lv - rv;	break;
+		case 2: v = lv * rv;	break;
+		case 3: v = lv / rv;	break;
+		default: v = 0;
+	}
 	int64_t low, high;
 	RF::toDataInt64( v, low, high );
 
@@ -174,12 +174,12 @@ Java_edu_spl_R_operation3( JNIEnv *env, jobject obj, jdouble left, jlong rLow, j
 	R lv = left, rv = RF::fromDataInt64( rLow, rHigh );
 	R v;
 	switch( ope ){
-    		case 0: v = lv + rv;	break;
-    		case 1: v = lv - rv;	break;
-    		case 2: v = lv * rv;	break;
-    		case 3: v = lv / rv;	break;
-    		default: v = 0;
-    	}
+		case 0: v = lv + rv;	break;
+		case 1: v = lv - rv;	break;
+		case 2: v = lv * rv;	break;
+		case 3: v = lv / rv;	break;
+		default: v = 0;
+	}
 	int64_t low, high;
 	RF::toDataInt64( v, low, high );
 
@@ -197,12 +197,36 @@ Java_edu_spl_R_operation4( JNIEnv *env, jobject obj, jdouble left, jdouble right
 	R lv = left, rv = right;
 	R v;
 	switch( ope ){
-    		case 0: v = lv + rv;	break;
-    		case 1: v = lv - rv;	break;
-    		case 2: v = lv * rv;	break;
-    		case 3: v = lv / rv;	break;
-    		default: v = 0;
-    	}
+		case 0: v = lv + rv;	break;
+		case 1: v = lv - rv;	break;
+		case 2: v = lv * rv;	break;
+		case 3: v = lv / rv;	break;
+		default: v = 0;
+	}
+	int64_t low, high;
+	RF::toDataInt64( v, low, high );
+
+	jlong outCArray[] = { low, high };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 2 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
+	return outJNIArray;
+}
+
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_operation5( JNIEnv *env, jobject obj, jlong vLow, jlong vHigh, jint ope ){
+	R value = RF::fromDataInt64( vLow, vHigh );
+	R v;
+	switch( ope ){
+		case 0: v = RF::abs( value );		break;
+		case 1: v = RF::floor( value );		break;
+		case 2: v = RF::ceil( value );		break;
+		case 3: v = RF::trunc( value );		break;
+		case 4: v = RF::round( value );		break;
+		default: v = 0;
+	}
 	int64_t low, high;
 	RF::toDataInt64( v, low, high );
 

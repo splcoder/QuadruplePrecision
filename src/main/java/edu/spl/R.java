@@ -107,6 +107,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 
 	@Override
 	public String toString(){ return toStr( low, high, 0 ).trim(); }	// 0 = 33 digits ('all')
+	public String toString( int prec ){ return toStr( low, high, prec ).trim(); }
 
 	@Override
 	public boolean equals( Object o ){
@@ -302,6 +303,53 @@ public class R extends Number implements Comparable<R>, Serializable {
 		long[] v = operation4( l, r, 3 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
+	}
+
+	// Rounding functions ----------------------------------------------------------------------------------------------
+	private static native long[] operation5( long low, long high, int ope );
+
+	public static R abs( R r ){
+		long[] v = operation5( r.low, r.high, 0 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R floor( R r ){
+		long[] v = operation5( r.low, r.high, 1 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R ceil( R r ){
+		long[] v = operation5( r.low, r.high, 2 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R trunc( R r ){
+		long[] v = operation5( r.low, r.high, 3 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R round( R r ){
+		long[] v = operation5( r.low, r.high, 4 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	// Power and Root functions ----------------------------------------------------------------------------------------
+	// Logarithm and Exponential functions -----------------------------------------------------------------------------
+	// Trigonometric functions -----------------------------------------------------------------------------------------
+	// Hyperbolic functions --------------------------------------------------------------------------------------------
+	// Bessel functions ------------------------------------------------------------------------------------------------
+	// Other functions -------------------------------------------------------------------------------------------------
+	public static R sum( List<R> list ){
+		R res = new R();	// 0
+		int length = list.size();
+		for( int i = 0; i < length; i++ )	res = res.add( list.get( i ) );
+		return res;
+	}
+	public static R product( List<R> list ){
+		R res = new R( 1 );
+		int length = list.size();
+		for( int i = 0; i < length; i++ )	res = res.mul( list.get( i ) );
+		return res;
 	}
 	// TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	// TODO ???  +2.306323558737156172766198381637374e+34	<<< tan( PI/2 ) << NOT INF !!!

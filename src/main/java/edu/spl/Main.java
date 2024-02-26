@@ -16,6 +16,7 @@ public class Main {
 		System.out.println( "Double: " + d + " = " + Math.PI );
 		System.out.println( "Long  : " + lo );
 		System.out.println( "=? " + R.areEquals( r, t ) + ", compare: " + r.compareTo( t ) );
+		System.out.println( R.round( r ).toString( 5 ) );
 		System.out.println( "ENDED...................." );
 	}
 }
