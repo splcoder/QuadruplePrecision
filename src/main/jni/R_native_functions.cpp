@@ -75,8 +75,8 @@ Java_edu_spl_R_initConstant( JNIEnv *env, jobject obj, jint value ){
 	R v;
 	switch( value ){
 		case -6:	v = RF::NAN;		break;
-		//case -5:	v = RF::INF_P;		break;			//  +2.306323558737156172766198381637374e+34	<<< tan( PI/2 )
-		//case -4:	v = RF::INF_N;		break;
+		case -5:	v = RF::INF_P;		break;
+		case -4:	v = RF::INF_N;		break;
 		case -3:	v = RF::MAX;		break;
 		case -2:	v = RF::MIN;		break;
 		case -1:	v = RF::PRECISION;	break;

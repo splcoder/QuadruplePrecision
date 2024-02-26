@@ -31,11 +31,12 @@ private:
 
 	RF(){}
 public:
-	static constexpr R PRECISION = 1e-30q;	// Quadruple precision
-	static constexpr R MAX = FLT128_MAX;
-	static constexpr R MIN = FLT128_MIN;
+	static constexpr R PRECISION	= 1e-30q;	// Quadruple precision
+	static constexpr R MAX			= FLT128_MAX;
+	static constexpr R MIN			= FLT128_MIN;
+	static const R INF_P;
+	static const R INF_N;
 	static const R NAN;
-
 	// For printing
 	static const size_t MAX_DIGIT_PREC = 33;// Use 33 as max (= FLT128_DIG)
 
@@ -123,7 +124,7 @@ public:
 	static bool isInf( const R &x ){ return isinfq( x ); }				// check for infinity
 	static bool isNan( const R &x ){ return isnanq( x ); }				// check for not a number
 	static bool isSignaling( const R &x ){ return issignalingq( x ); }	// check for signaling not a number
-	static R nan(){ return nanq(""); }									// return quiet NaN
+	static R nan( const char* str = "" ){ return nanq( str ); }			// return quiet NaN
 	// Math functions --------------------------------------------------------------------------
 	static int signBit( const R &x ){ return signbitq( x ); }			// return sign bit
 	static R fma( const R &x, const R &y, const R &z ){ return fmaq( x, y, z ); }	// Computes x*y+z
@@ -213,6 +214,10 @@ public:
 	static constexpr R M_SQRT2		= M_SQRT2q;		// sqrt(2)
 	static constexpr R M_1_SQRT2	= M_SQRT1_2q;	// 1/sqrt(2)
 };
+
+// For printing:
+// cout << "Value: " << RF::M_PI << endl;
+std::ostream& operator<< ( std::ostream& out, const R& r );
 
 
 /**
@@ -322,7 +327,7 @@ public:
 	static C pow( const C &x, const C &y ){ return cpowq( x, y ); }
 	// Logarithm and Exponential ---------------------------------------------------------------
 	static C exp( const C &x ){ return cexpq( x ); }
-	static C expi( const R &x ){ return cexpiq( x ); }							// computes the exponential function of â€œiâ€ times a real value
+	static C expi( const R &x ){ return cexpiq( x ); }							// computes the exponential function of “i” times a real value
 	static C ln( const C &x ){ return clogq( x ); }								// natural logarithm function
 	static C log10( const C &x ){ return clog10q( x ); }						// base 10 logarithm function
 	static C logn( const C &x, const C &n ){ return clogq( x )/clogq( n ); }	// base n logarithm function

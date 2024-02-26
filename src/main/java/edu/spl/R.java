@@ -30,8 +30,8 @@ public class R extends Number implements Comparable<R>, Serializable {
 	public static final int BYTES		= 16;
 	private static native long[] initConstant( int cte );
 	public static final R NAN			= new R( -6, true );
-	//public static final R INF_P			= new R( -5, true );		//  +2.306323558737156172766198381637374e+34	<<< tan( PI/2 )
-	//public static final R INF_N			= new R( -4, true );		// TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	public static final R INF_P			= new R( -5, true );
+	public static final R INF_N			= new R( -4, true );
 	public static final R MAX			= new R( -3, true );
 	public static final R MIN			= new R( -2, true );
 	public static final R PRECISION		= new R( -1, true );
@@ -167,10 +167,12 @@ public class R extends Number implements Comparable<R>, Serializable {
 
 	// Basic functions -------------------------------------------------------------------------------------------------
 	public boolean isNan(){ return this.equals( R.NAN ); }
-	//public boolean isInf(){}		// TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-	//public boolean isFin(){}
-	//public R neg(){}
-	//public R sqr(){}
+	public boolean isInf(){ return this.equals( R.INF_P ) || this.equals( R.INF_N ); }
+	public boolean isInfP(){ return this.equals( R.INF_P ); }
+	public boolean isInfN(){ return this.equals( R.INF_N ); }
+	public boolean isFin(){ return ! (this.equals( R.NAN ) || this.equals( R.INF_P ) || this.equals( R.INF_N )); }
+	public R neg(){ return this.mul( -1 ); }
+	public R sqr(){ return this.mul( this ); }
 
 	// Fast access for basic operations (+ - * /) ----------------------------------------------------------------------
 	private static native long[] operation( long lLow, long lHigh, long rLow, long rHigh, int ope );
@@ -231,8 +233,16 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	// TODO add( double l, R r )
-	// TODO add( double l, double r )
+	public static R add( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 0 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R add( double l, double r ){
+		long[] v = operation4( l, r, 0 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	public static R sub( R l, R r ){
 		long[] v = operation( l.low, l.high, r.low, r.high, 1 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
@@ -243,8 +253,16 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	// TODO add( double l, R r )
-	// TODO add( double l, double r )
+	public static R sub( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 1 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R sub( double l, double r ){
+		long[] v = operation4( l, r, 1 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	public static R mul( R l, R r ){
 		long[] v = operation( l.low, l.high, r.low, r.high, 2 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
@@ -255,8 +273,16 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	// TODO add( double l, R r )
-	// TODO add( double l, double r )
+	public static R mul( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 2 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R mul( double l, double r ){
+		long[] v = operation4( l, r, 2 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	public static R div( R l, R r ){
 		long[] v = operation( l.low, l.high, r.low, r.high, 3 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
@@ -267,7 +293,16 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	// TODO add( double l, R r )
-	// TODO add( double l, double r )
+	public static R div( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 3 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R div( double l, double r ){
+		long[] v = operation4( l, r, 3 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	// TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	// TODO ???  +2.306323558737156172766198381637374e+34	<<< tan( PI/2 ) << NOT INF !!!
 }
