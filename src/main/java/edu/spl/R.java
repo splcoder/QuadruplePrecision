@@ -360,6 +360,66 @@ public class R extends Number implements Comparable<R>, Serializable {
 		return new R( v[0], v[1] );
 	}
 	// Power and Root functions ----------------------------------------------------------------------------------------
+	public static R hypot( R l, R r ){
+		long[] v = operation( l.low, l.high, r.low, r.high, 4 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R hypot( R l, double r ){
+		long[] v = operation2( l.low, l.high, r, 4 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R hypot( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 4 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R hypot( double l, double r ){
+		long[] v = operation4( l, r, 4 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R sqrt( R r ){
+		long[] v = operation5( r.low, r.high, 5 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R sqrt( double r ){
+		long[] v = operation6( r, 5 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R cbrt( R r ){
+		long[] v = operation5( r.low, r.high, 6 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R cbrt( double r ){
+		long[] v = operation6( r, 6 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R pow( R l, R r ){
+		long[] v = operation( l.low, l.high, r.low, r.high, 5 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R pow( R l, double r ){
+		long[] v = operation2( l.low, l.high, r, 5 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R pow( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 5 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R pow( double l, double r ){
+		long[] v = operation4( l, r, 5 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	// Logarithm and Exponential functions -----------------------------------------------------------------------------
 	// Trigonometric functions -----------------------------------------------------------------------------------------
 	// Hyperbolic functions --------------------------------------------------------------------------------------------
