@@ -307,9 +307,15 @@ public class R extends Number implements Comparable<R>, Serializable {
 
 	// Rounding functions ----------------------------------------------------------------------------------------------
 	private static native long[] operation5( long low, long high, int ope );
+	private static native long[] operation6( double value, int ope );
 
 	public static R abs( R r ){
 		long[] v = operation5( r.low, r.high, 0 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R abs( double r ){
+		long[] v = operation6( r, 0 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
@@ -318,8 +324,18 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
+	public static R floor( double r ){
+		long[] v = operation6( r, 1 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	public static R ceil( R r ){
 		long[] v = operation5( r.low, r.high, 2 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R ceil( double r ){
+		long[] v = operation6( r, 2 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
@@ -328,8 +344,18 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
+	public static R trunc( double r ){
+		long[] v = operation6( r, 3 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	public static R round( R r ){
 		long[] v = operation5( r.low, r.high, 4 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R round( double r ){
+		long[] v = operation6( r, 4 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}

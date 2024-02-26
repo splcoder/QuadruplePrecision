@@ -94,7 +94,7 @@ Java_edu_spl_R_initConstant( JNIEnv *env, jobject obj, jint value ){
 		case 10:	v = RF::M_2_SQRTPI;	break;
 		case 11:	v = RF::M_SQRT2;	break;
 		case 12:	v = RF::M_1_SQRT2;	break;
-		default:	v = 0;
+		default:	v = RF::NAN;
 	}
 	int64_t low, high;
 	RF::toDataInt64( v, low, high );
@@ -125,14 +125,13 @@ Java_edu_spl_R_compare( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong
 
 JNIEXPORT jlongArray JNICALL
 Java_edu_spl_R_operation( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong rLow, jlong rHigh, jint ope ){
-	R lv = RF::fromDataInt64( lLow, lHigh ), rv = RF::fromDataInt64( rLow, rHigh );
-	R v;
+	R v, lv = RF::fromDataInt64( lLow, lHigh ), rv = RF::fromDataInt64( rLow, rHigh );
 	switch( ope ){
 		case 0: v = lv + rv;	break;
 		case 1: v = lv - rv;	break;
 		case 2: v = lv * rv;	break;
 		case 3: v = lv / rv;	break;
-		default: v = 0;
+		default: v = RF::NAN;
 	}
 	int64_t low, high;
 	RF::toDataInt64( v, low, high );
@@ -148,14 +147,13 @@ Java_edu_spl_R_operation( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlo
 
 JNIEXPORT jlongArray JNICALL
 Java_edu_spl_R_operation2( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jdouble right, jint ope ){
-	R lv = RF::fromDataInt64( lLow, lHigh ), rv = right;
-	R v;
+	R v, lv = RF::fromDataInt64( lLow, lHigh ), rv = right;
 	switch( ope ){
 		case 0: v = lv + rv;	break;
 		case 1: v = lv - rv;	break;
 		case 2: v = lv * rv;	break;
 		case 3: v = lv / rv;	break;
-		default: v = 0;
+		default: v = RF::NAN;
 	}
 	int64_t low, high;
 	RF::toDataInt64( v, low, high );
@@ -171,14 +169,13 @@ Java_edu_spl_R_operation2( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jd
 
 JNIEXPORT jlongArray JNICALL
 Java_edu_spl_R_operation3( JNIEnv *env, jobject obj, jdouble left, jlong rLow, jlong rHigh, jint ope ){
-	R lv = left, rv = RF::fromDataInt64( rLow, rHigh );
-	R v;
+	R v, lv = left, rv = RF::fromDataInt64( rLow, rHigh );
 	switch( ope ){
 		case 0: v = lv + rv;	break;
 		case 1: v = lv - rv;	break;
 		case 2: v = lv * rv;	break;
 		case 3: v = lv / rv;	break;
-		default: v = 0;
+		default: v = RF::NAN;
 	}
 	int64_t low, high;
 	RF::toDataInt64( v, low, high );
@@ -194,14 +191,13 @@ Java_edu_spl_R_operation3( JNIEnv *env, jobject obj, jdouble left, jlong rLow, j
 
 JNIEXPORT jlongArray JNICALL
 Java_edu_spl_R_operation4( JNIEnv *env, jobject obj, jdouble left, jdouble right, jint ope ){
-	R lv = left, rv = right;
-	R v;
+	R v, lv = left, rv = right;
 	switch( ope ){
 		case 0: v = lv + rv;	break;
 		case 1: v = lv - rv;	break;
 		case 2: v = lv * rv;	break;
 		case 3: v = lv / rv;	break;
-		default: v = 0;
+		default: v = RF::NAN;
 	}
 	int64_t low, high;
 	RF::toDataInt64( v, low, high );
@@ -215,18 +211,39 @@ Java_edu_spl_R_operation4( JNIEnv *env, jobject obj, jdouble left, jdouble right
 	return outJNIArray;
 }
 
+void exeOperation( R &out, jint ope, const R &value ){
+	switch( ope ){
+		case 0: out = RF::abs( value );			break;
+		case 1: out = RF::floor( value );		break;
+		case 2: out = RF::ceil( value );		break;
+		case 3: out = RF::trunc( value );		break;
+		case 4: out = RF::round( value );		break;
+		default: out = RF::NAN;
+	}
+}
+
 JNIEXPORT jlongArray JNICALL
 Java_edu_spl_R_operation5( JNIEnv *env, jobject obj, jlong vLow, jlong vHigh, jint ope ){
-	R value = RF::fromDataInt64( vLow, vHigh );
-	R v;
-	switch( ope ){
-		case 0: v = RF::abs( value );		break;
-		case 1: v = RF::floor( value );		break;
-		case 2: v = RF::ceil( value );		break;
-		case 3: v = RF::trunc( value );		break;
-		case 4: v = RF::round( value );		break;
-		default: v = 0;
-	}
+	R v, value = RF::fromDataInt64( vLow, vHigh );
+	exeOperation( v, ope, value );
+
+	int64_t low, high;
+	RF::toDataInt64( v, low, high );
+
+	jlong outCArray[] = { low, high };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 2 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
+	return outJNIArray;
+}
+
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_operation6( JNIEnv *env, jobject obj, jdouble dv, jint ope ){
+	R v, value = dv;
+	exeOperation( v, ope, value );
+
 	int64_t low, high;
 	RF::toDataInt64( v, low, high );
 
