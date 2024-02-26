@@ -118,6 +118,27 @@ public:
 		}
 		return std::string( RF::EMPTY );
 	}
+	// Printing using external buffer ----------------------------------------------------------
+	// char buf[ RF::getBufSize() ];
+	static const size_t getBufSize(){ return RF::BUF_SIZE; }
+	static void print( const R &r, char *buf, size_t prec = MAX_DIGIT_PREC ){
+		if( prec > MAX_DIGIT_PREC )   prec = MAX_DIGIT_PREC;
+		int n = quadmath_snprintf( buf, RF::BUF_SIZE, "%+-#46.*Qe", prec, r );
+		if( (size_t) n < RF::BUF_SIZE )   printf( "%s\n", buf );
+	}
+	static char* printed( const R &r, char *buf, size_t prec = MAX_DIGIT_PREC ){
+		if( prec > MAX_DIGIT_PREC )   prec = MAX_DIGIT_PREC;
+		int n = quadmath_snprintf( buf, RF::BUF_SIZE, "%+-#46.*Qe", prec, r );
+		if( (size_t) n < RF::BUF_SIZE )	return buf;
+		*buf = '\0';	// Empty (never reach this point)
+		return buf;
+	}
+	static std::string toString( const R &r, char *buf, size_t prec = MAX_DIGIT_PREC ){
+		if( prec > MAX_DIGIT_PREC )   prec = MAX_DIGIT_PREC;
+		int n = quadmath_snprintf( buf, RF::BUF_SIZE, "%+-#46.*Qe", prec, r );
+		if( (size_t) n < RF::BUF_SIZE )	return std::string( buf );
+		return std::string( RF::EMPTY );
+	}
 	//------------------------------------------------------------------------------------------
 	// Check functions -------------------------------------------------------------------------
 	static bool isFin( const R &x ){ return finiteq( x ); }				// check finiteness of value
@@ -327,7 +348,7 @@ public:
 	static C pow( const C &x, const C &y ){ return cpowq( x, y ); }
 	// Logarithm and Exponential ---------------------------------------------------------------
 	static C exp( const C &x ){ return cexpq( x ); }
-	static C expi( const R &x ){ return cexpiq( x ); }							// computes the exponential function of “i” times a real value
+	static C expi( const R &x ){ return cexpiq( x ); }							// computes the exponential function of ï¿½iï¿½ times a real value
 	static C ln( const C &x ){ return clogq( x ); }								// natural logarithm function
 	static C log10( const C &x ){ return clog10q( x ); }						// base 10 logarithm function
 	static C logn( const C &x, const C &n ){ return clogq( x )/clogq( n ); }	// base n logarithm function

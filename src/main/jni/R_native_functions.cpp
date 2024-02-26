@@ -52,10 +52,12 @@ Java_edu_spl_R_initWithString( JNIEnv *env, jobject obj, jstring value ){
 
 JNIEXPORT jstring JNICALL
 Java_edu_spl_R_toStr( JNIEnv *env, jobject obj, jlong low, jlong high, jint prec ){
-	if( prec == 0 )	prec = 40;
+	if( prec <= 0 )	prec = RF::MAX_DIGIT_PREC;
 	R v = RF::fromDataInt64( low, high );
-	const char *p = RF::printed( v, prec );
-	return env->NewStringUTF( p );
+	//return env->NewStringUTF( RF::printed( v, prec ) );
+	// Thread safe:
+	char buf[ RF::getBufSize() ];
+	return env->NewStringUTF( RF::printed( v, buf, prec ) );
 }
 
 JNIEXPORT jlong JNICALL
