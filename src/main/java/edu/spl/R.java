@@ -535,6 +535,39 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
+	public static R cos( R r ){
+		long[] v = operation5( r.low, r.high, 16 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R cos( double r ){
+		long[] v = operation6( r, 16 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R tan( R r ){
+		long[] v = operation5( r.low, r.high, 17 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R tan( double r ){
+		long[] v = operation6( r, 17 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	private static native long[] operation7( long low, long high, int ope );	// Returns an array of 2 R values
+	private static native long[] operation8( double value, int ope );			// Returns an array of 2 R values
+
+	public static R[] sinCos( R r ){
+		long[] v = operation7( r.low, r.high, 0 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R[]{ new R( v[0], v[1] ), new R( v[2], v[3] ) };
+	}
+	public static R[] sinCos( double r ){
+		long[] v = operation8( r, 0 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R[]{ new R( v[0], v[1] ), new R( v[2], v[3] ) };
+	}
 	// Hyperbolic functions --------------------------------------------------------------------------------------------
 	// Bessel functions ------------------------------------------------------------------------------------------------
 	// Other functions -------------------------------------------------------------------------------------------------
@@ -551,5 +584,4 @@ public class R extends Number implements Comparable<R>, Serializable {
 		return res;
 	}
 	// TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-	// TODO ???  +2.306323558737156172766198381637374e+34	<<< tan( PI/2 ) << NOT INF !!!
 }

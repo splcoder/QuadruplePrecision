@@ -224,6 +224,8 @@ void exeOperation( R &out, jint ope, const R &value ){
 		case 13: out = RF::log2( value );		break;
 		case 14: out = RF::log10( value );		break;
 		case 15: out = RF::sin( value );		break;
+		case 16: out = RF::cos( value );		break;
+		case 17: out = RF::tan( value );		break;
 		default: out = RF::NAN;
 	}
 }
@@ -259,6 +261,50 @@ Java_edu_spl_R_operation6( JNIEnv *env, jobject obj, jdouble dv, jint ope ){
 	jlongArray outJNIArray = env->NewLongArray( 2 );			// allocate
 	if( NULL == outJNIArray )	return NULL;
 	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
+	return outJNIArray;
+}
+
+void exeOperation1Arg2Out( R &out1, R &out2, jint ope, const R &value ){
+	switch( ope ){
+		case 0: RF::sinCos( value, &out1, &out2 );		break;
+        default: out1 = RF::NAN; out2 = RF::NAN;
+	}
+}
+
+// Returns an array of 2 R values
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_operation7( JNIEnv *env, jobject obj, jlong vLow, jlong vHigh, jint ope ){
+	R out1, out2, value = RF::fromDataInt64( vLow, vHigh );
+	exeOperation1Arg2Out( out1, out2, ope, value );
+
+	int64_t lLow, lHigh, rLow, rHigh;
+	RF::toDataInt64( out1, lLow, lHigh );
+	RF::toDataInt64( out2, rLow, rHigh );
+
+	jlong outCArray[] = { lLow, lHigh, rLow, rHigh };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 4 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 4, outCArray );	// copy
+	return outJNIArray;
+}
+
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_operation8( JNIEnv *env, jobject obj, jdouble dv, jint ope ){
+	R out1, out2, value = dv;
+	exeOperation1Arg2Out( out1, out2, ope, value );
+
+	int64_t lLow, lHigh, rLow, rHigh;
+	RF::toDataInt64( out1, lLow, lHigh );
+	RF::toDataInt64( out2, rLow, rHigh );
+
+	jlong outCArray[] = { lLow, lHigh, rLow, rHigh };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 4 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 4, outCArray );	// copy
 	return outJNIArray;
 }
 

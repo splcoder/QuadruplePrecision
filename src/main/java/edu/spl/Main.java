@@ -18,6 +18,8 @@ public class Main {
 		System.out.println( "=? " + R.areEquals( r, t ) + ", compare: " + r.compareTo( t ) );
 		System.out.println( R.round( r ).toString( 5 ) );
 		System.out.println( R.round( 3.141516 ).toString( 5 ) );
+		R[] out = R.sinCos( 1 );
+		System.out.println( "sinCos(1): " + out[0] + ", " + out[1] );
 		System.out.println( "ENDED...................." );
 	}
 }
