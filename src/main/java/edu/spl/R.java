@@ -421,7 +421,120 @@ public class R extends Number implements Comparable<R>, Serializable {
 		return new R( v[0], v[1] );
 	}
 	// Logarithm and Exponential functions -----------------------------------------------------------------------------
+	public static R exp( R r ){
+		long[] v = operation5( r.low, r.high, 7 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R exp( double r ){
+		long[] v = operation6( r, 7 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R exp2( R r ){		// 2^x
+		long[] v = operation5( r.low, r.high, 8 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R exp2( double r ){	// 2^x
+		long[] v = operation6( r, 8 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	// For small magnitude values of x, expm1(x) may be more accurate than exp(x)-1.
+	public static R expm1( R r ){
+		long[] v = operation5( r.low, r.high, 9 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R expm1( double r ){
+		long[] v = operation6( r, 9 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R expW( R r ){
+		long[] v = operation5( r.low, r.high, 10 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R expW( double r ){
+		long[] v = operation6( r, 10 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R ln( R r ){
+		long[] v = operation5( r.low, r.high, 11 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R ln( double r ){
+		long[] v = operation6( r, 11 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	// For small magnitude values of x, ln1p(x) may be more accurate than ln(1+x)
+	public static R ln1p( R r ){
+		long[] v = operation5( r.low, r.high, 12 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R ln1p( double r ){
+		long[] v = operation6( r, 12 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R log2( R r ){
+		long[] v = operation5( r.low, r.high, 13 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R log2( double r ){
+		long[] v = operation6( r, 13 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R log10( R r ){
+		long[] v = operation5( r.low, r.high, 14 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R log10( double r ){
+		long[] v = operation6( r, 14 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	// Log in base r = log(l)/log(r)
+	public static R logn( R l, R r ){
+		long[] v = operation( l.low, l.high, r.low, r.high, 6 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R logn( R l, double r ){
+		long[] v = operation2( l.low, l.high, r, 6 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R logn( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 6 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R logn( double l, double r ){
+		long[] v = operation4( l, r, 6 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	// Trigonometric functions -----------------------------------------------------------------------------------------
+	public static R sin( R r ){
+		long[] v = operation5( r.low, r.high, 15 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R sin( double r ){
+		long[] v = operation6( r, 15 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	// Hyperbolic functions --------------------------------------------------------------------------------------------
 	// Bessel functions ------------------------------------------------------------------------------------------------
 	// Other functions -------------------------------------------------------------------------------------------------

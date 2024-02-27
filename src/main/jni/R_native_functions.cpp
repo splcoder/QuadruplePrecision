@@ -133,6 +133,7 @@ void exeOperation2Args( R &out, jint ope, const R &lValue, const R &rValue ){
 		case 3: out = lValue / rValue;					break;
 		case 4: out = RF::hypot( lValue, rValue );		break;
 		case 5: out = RF::pow( lValue, rValue );		break;
+		case 6: out = RF::logn( lValue, rValue );		break;
 		default: out = RF::NAN;
 	}
 }
@@ -214,6 +215,15 @@ void exeOperation( R &out, jint ope, const R &value ){
 		case 4: out = RF::round( value );		break;
 		case 5: out = RF::sqrt( value );		break;
 		case 6: out = RF::cbrt( value );		break;
+		case 7: out = RF::exp( value );			break;
+		case 8: out = RF::exp2( value );		break;
+		case 9: out = RF::expm1( value );		break;
+		case 10: out = RF::expW( value );		break;
+		case 11: out = RF::ln( value );			break;
+		case 12: out = RF::ln1p( value );		break;
+		case 13: out = RF::log2( value );		break;
+		case 14: out = RF::log10( value );		break;
+		case 15: out = RF::sin( value );		break;
 		default: out = RF::NAN;
 	}
 }
