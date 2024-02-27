@@ -1,5 +1,7 @@
 package edu.spl;
 
+import java.util.stream.Stream;
+
 public class Main {
 
 	public static void main( String[] args ){
@@ -20,6 +22,11 @@ public class Main {
 		System.out.println( R.round( 3.141516 ).toString( 5 ) );
 		R[] out = R.sinCos( 1 );
 		System.out.println( "sinCos(1): " + out[0] + ", " + out[1] );
+
+		Stream<R> stream = Stream.of( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ) );
+		//System.out.println( R.sum( stream ) );
+		System.out.println( R.product( stream ) );
+
 		System.out.println( "ENDED...................." );
 	}
 }

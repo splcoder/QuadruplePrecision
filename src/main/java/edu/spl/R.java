@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 /**
  * Real numbers using quadruple precision
@@ -28,6 +29,8 @@ public class R extends Number implements Comparable<R>, Serializable {
 	// Constants -------------------------------------------------------------------------------------------------------
 	public static final int BITS		= 128;
 	public static final int BYTES		= 16;
+	public static final R ZERO			= new R( 0 );
+	public static final R ONE			= new R( 1 );
 	private static native long[] initConstant( int cte );
 	public static final R NAN			= new R( -6, true );
 	public static final R INF_P			= new R( -5, true );
@@ -682,16 +685,18 @@ public class R extends Number implements Comparable<R>, Serializable {
 	// Bessel functions ------------------------------------------------------------------------------------------------
 	// Other functions -------------------------------------------------------------------------------------------------
 	public static R sum( List<R> list ){
-		R res = new R();	// 0
+		R res = ZERO;	// 0
 		int length = list.size();
 		for( int i = 0; i < length; i++ )	res = res.add( list.get( i ) );
 		return res;
 	}
+	public static R sum( Stream<R> stream ){ return stream.reduce( ZERO, (a, b) -> a.add( b ) ); }
 	public static R product( List<R> list ){
-		R res = new R( 1 );
+		R res = ONE;
 		int length = list.size();
 		for( int i = 0; i < length; i++ )	res = res.mul( list.get( i ) );
 		return res;
 	}
+	public static R product( Stream<R> stream ){ return stream.reduce( ONE, (a, b) -> a.mul( b ) ); }
 	// TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 }
