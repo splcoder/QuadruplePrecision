@@ -568,7 +568,117 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R[]{ new R( v[0], v[1] ), new R( v[2], v[3] ) };
 	}
+	public static R asin( R r ){
+		long[] v = operation5( r.low, r.high, 18 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R asin( double r ){
+		long[] v = operation6( r, 18 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R acos( R r ){
+		long[] v = operation5( r.low, r.high, 19 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R acos( double r ){
+		long[] v = operation6( r, 19 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R atan( R r ){
+		long[] v = operation5( r.low, r.high, 20 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R atan( double r ){
+		long[] v = operation6( r, 20 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R atan2( R l, R r ){
+		long[] v = operation( l.low, l.high, r.low, r.high, 7 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R atan2( R l, double r ){
+		long[] v = operation2( l.low, l.high, r, 7 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R atan2( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 7 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R atan2( double l, double r ){
+		long[] v = operation4( l, r, 7 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	// Hyperbolic functions --------------------------------------------------------------------------------------------
+	public static R sinh( R r ){
+		long[] v = operation5( r.low, r.high, 21 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R sinh( double r ){
+		long[] v = operation6( r, 21 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R cosh( R r ){
+		long[] v = operation5( r.low, r.high, 22 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R cosh( double r ){
+		long[] v = operation6( r, 22 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R tanh( R r ){
+		long[] v = operation5( r.low, r.high, 23 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R tanh( double r ){
+		long[] v = operation6( r, 23 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R asinh( R r ){
+		long[] v = operation5( r.low, r.high, 24 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R asinh( double r ){
+		long[] v = operation6( r, 24 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R acosh( R r ){
+		long[] v = operation5( r.low, r.high, 25 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R acosh( double r ){
+		long[] v = operation6( r, 25 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R atanh( R r ){
+		long[] v = operation5( r.low, r.high, 26 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R atanh( double r ){
+		long[] v = operation6( r, 26 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	// Bessel functions ------------------------------------------------------------------------------------------------
 	// Other functions -------------------------------------------------------------------------------------------------
 	public static R sum( List<R> list ){
