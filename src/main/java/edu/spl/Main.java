@@ -27,6 +27,7 @@ public class Main {
 		//System.out.println( R.sum( stream ) );
 		System.out.println( R.product( stream ) );
 		System.out.println( R.product( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ) ) );
+		System.out.println( R.product( 3, 5, 6 ) );
 
 		System.out.println( "ENDED...................." );
 	}
