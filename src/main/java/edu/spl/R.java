@@ -787,17 +787,15 @@ public class R extends Number implements Comparable<R>, Serializable {
 		return new R( v[0], v[1] );
 	}
 	// Extra functions -------------------------------------------------------------------------------------------------
-	public static R sum( List<R> list ){
-		R res = ZERO;	// 0
-		int length = list.size();
-		for( int i = 0; i < length; i++ )	res = res.add( list.get( i ) );
+	public static R sum( R... list ){
+		R res = ZERO;
+		for( int i = 0; i < list.length; i++ )	res = res.add( list[ i ] );
 		return res;
 	}
 	public static R sum( Stream<R> stream ){ return stream.reduce( ZERO, (a, b) -> a.add( b ) ); }
-	public static R product( List<R> list ){
+	public static R product( R... list ){
 		R res = ONE;
-		int length = list.size();
-		for( int i = 0; i < length; i++ )	res = res.mul( list.get( i ) );
+		for( int i = 0; i < list.length; i++ )	res = res.mul( list[ i ] );
 		return res;
 	}
 	public static R product( Stream<R> stream ){ return stream.reduce( ONE, (a, b) -> a.mul( b ) ); }
