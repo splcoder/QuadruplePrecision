@@ -506,24 +506,24 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	// Log in base r = log(l)/log(r)
-	public static R logn( R l, R r ){
-		long[] v = operation( l.low, l.high, r.low, r.high, 6 );
+	// Log in a base = log(l)/log(base)
+	public static R logn( R l, R base ){
+		long[] v = operation( l.low, l.high, base.low, base.high, 6 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R logn( R l, double r ){
-		long[] v = operation2( l.low, l.high, r, 6 );
+	public static R logn( R l, double base ){
+		long[] v = operation2( l.low, l.high, base, 6 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R logn( double l, R r ){
-		long[] v = operation3( l, r.low, r.high, 6 );
+	public static R logn( double l, R base ){
+		long[] v = operation3( l, base.low, base.high, 6 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R logn( double l, double r ){
-		long[] v = operation4( l, r, 6 );
+	public static R logn( double l, double base ){
+		long[] v = operation4( l, base, 6 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
