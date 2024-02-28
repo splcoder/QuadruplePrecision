@@ -2,6 +2,7 @@ package edu.spl;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -682,6 +683,97 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
+	// Mod, Max and Min functions ---------------------------------------------------------------------------------------------------
+	public static R max( R l, R r ){
+		long[] v = operation( l.low, l.high, r.low, r.high, 8 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R max( R l, double r ){
+		long[] v = operation2( l.low, l.high, r, 8 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R max( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 8 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R max( double l, double r ){
+		long[] v = operation4( l, r, 8 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R min( R l, R r ){
+		long[] v = operation( l.low, l.high, r.low, r.high, 9 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R min( R l, double r ){
+		long[] v = operation2( l.low, l.high, r, 9 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R min( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 9 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R min( double l, double r ){
+		long[] v = operation4( l, r, 9 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R fmod( R l, R r ){
+		long[] v = operation( l.low, l.high, r.low, r.high, 10 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R fmod( R l, double r ){
+		long[] v = operation2( l.low, l.high, r, 10 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R fmod( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 10 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R fmod( double l, double r ){
+		long[] v = operation4( l, r, 10 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R rem( R l, R r ){	// Remainder: https://stackoverflow.com/questions/25734144/difference-between-c-functions-remainder-and-fmod
+		long[] v = operation( l.low, l.high, r.low, r.high, 11 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R rem( R l, double r ){
+		long[] v = operation2( l.low, l.high, r, 11 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R rem( double l, R r ){
+		long[] v = operation3( l, r.low, r.high, 11 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R rem( double l, double r ){
+		long[] v = operation4( l, r, 11 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R[] modf( R r ){	// decompose the floating-point number: [fractpart, intpart]
+		long[] v = operation7( r.low, r.high, 1 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R[]{ new R( v[0], v[1] ), new R( v[2], v[3] ) };
+	}
+	public static R[] modf( double r ){
+		long[] v = operation8( r, 1 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R[]{ new R( v[0], v[1] ), new R( v[2], v[3] ) };
+	}
 	// Bessel functions ------------------------------------------------------------------------------------------------
 	public static R j0( R r ){	// Bessel function of the first kind, first order
 		long[] v = operation5( r.low, r.high, 27 );
@@ -797,6 +889,13 @@ public class R extends Number implements Comparable<R>, Serializable {
 		for( int i = 0; i < list.length; i++ )	res = res.add( list[ i ] );
 		return res;
 	}
+	public static R sum( Collection<R> col ){
+		R res = ZERO;
+		if( ! col.isEmpty() ){
+			for( R r : col )	res = res.add( r );
+		}
+		return res;
+	}
 	public static R sum( Stream<R> stream ){ return stream.reduce( ZERO, (a, b) -> a.add( b ) ); }
 	public static R product( R... list ){
 		R res = ONE;
@@ -808,5 +907,36 @@ public class R extends Number implements Comparable<R>, Serializable {
 		for( int i = 0; i < list.length; i++ )	res = res.mul( list[ i ] );
 		return res;
 	}
+	public static R product( Collection<R> col ){
+		R res = ONE;
+		if( ! col.isEmpty() ){
+			for( R r : col )	res = res.mul( r );
+		}
+		return res;
+	}
 	public static R product( Stream<R> stream ){ return stream.reduce( ONE, (a, b) -> a.mul( b ) ); }
+	public static R max( R... list ){
+		if( list.length == 0 )	return R.NAN;
+		R res = list[0];
+		for( int i = 1; i < list.length; i++ )	res = R.max( res, list[ i ] );
+		return res;
+	}
+	public static R min( R... list ){
+		if( list.length == 0 )	return R.NAN;
+		R res = list[0];
+		for( int i = 1; i < list.length; i++ )	res = R.min( res, list[ i ] );
+		return res;
+	}
+	public static R max( Collection<R> col ){
+		if( col.isEmpty() )	return R.NAN;
+		R res = R.INF_N;
+		for( R r : col )	res = R.max( res, r );
+		return res;
+	}
+	public static R min( Collection<R> col ){
+		if( col.isEmpty() )	return R.NAN;
+		R res = R.INF_P;
+		for( R r : col )	res = R.min( res, r );
+		return res;
+	}
 }

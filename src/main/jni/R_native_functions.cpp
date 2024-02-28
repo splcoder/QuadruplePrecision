@@ -135,6 +135,10 @@ void exeOperation2Args( R &out, jint ope, const R &lValue, const R &rValue ){
 		case 5: out = RF::pow( lValue, rValue );		break;
 		case 6: out = RF::logn( lValue, rValue );		break;
 		case 7: out = RF::atan2( lValue, rValue );		break;
+		case 8: out = RF::max( lValue, rValue );		break;
+		case 9: out = RF::min( lValue, rValue );		break;
+		case 10: out = RF::fmod( lValue, rValue );		break;
+		case 11: out = RF::rem( lValue, rValue );		break;
 		default: out = RF::NAN;
 	}
 }
@@ -285,6 +289,7 @@ Java_edu_spl_R_operation6( JNIEnv *env, jobject obj, jdouble dv, jint ope ){
 void exeOperation1Arg2Out( R &out1, R &out2, jint ope, const R &value ){
 	switch( ope ){
 		case 0: RF::sinCos( value, &out1, &out2 );		break;
+		case 1: out1 = RF::modf( value, &out2 );		break;
         default: out1 = RF::NAN; out2 = RF::NAN;
 	}
 }

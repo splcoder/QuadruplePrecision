@@ -29,6 +29,14 @@ public class Main {
 		System.out.println( R.product( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ) ) );
 		System.out.println( R.product( 3, 5, 6 ) );
 
+		out = R.modf( R.M_PI );
+		System.out.println( "Parts of PI: " + out[0] + ", " + out[1] );
+
+		System.out.println( "7.5 % 2.1 = " + R.fmod( 7.5, 2.1 ) + " = " + (7.5%2.1) );
+
+		System.out.println( "max: " + R.max( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ) ) );
+		System.out.println( "min: " + R.min( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ) ) );
+
 		System.out.println( "ENDED...................." );
 	}
 }
