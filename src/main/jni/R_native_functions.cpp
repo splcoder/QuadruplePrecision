@@ -234,8 +234,16 @@ void exeOperation( R &out, jint ope, const R &value ){
 		case 22: out = RF::cosh( value );		break;
 		case 23: out = RF::tanh( value );		break;
 		case 24: out = RF::asinh( value );		break;
-        case 25: out = RF::acosh( value );		break;
-        case 26: out = RF::atanh( value );		break;
+		case 25: out = RF::acosh( value );		break;
+		case 26: out = RF::atanh( value );		break;
+		case 27: out = RF::j0( value );			break;
+		case 28: out = RF::j1( value );			break;
+		case 29: out = RF::y0( value );			break;
+		case 30: out = RF::y1( value );			break;
+		case 31: out = RF::erf( value );		break;
+		case 32: out = RF::erfc( value );		break;
+		case 33: out = RF::lgamma( value );		break;
+		case 34: out = RF::tgamma( value );		break;
 		default: out = RF::NAN;
 	}
 }
@@ -315,6 +323,48 @@ Java_edu_spl_R_operation8( JNIEnv *env, jobject obj, jdouble dv, jint ope ){
 	jlongArray outJNIArray = env->NewLongArray( 4 );			// allocate
 	if( NULL == outJNIArray )	return NULL;
 	env->SetLongArrayRegion( outJNIArray, 0 , 4, outCArray );	// copy
+	return outJNIArray;
+}
+
+void exeOperation2ArgsWithInt( R &out, jint ope, const R &value, jint order ){
+	switch( ope ){
+		case 0: out = RF::jn( order, value );			break;
+		case 1: out = RF::yn( order, value );			break;
+		default: out = RF::NAN;
+	}
+}
+
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_operation9( JNIEnv *env, jobject obj, jint order, jlong vLow, jlong vHigh, jint ope ){
+	R v, value = RF::fromDataInt64( vLow, vHigh );
+	exeOperation2ArgsWithInt( v, ope, value, order );
+
+	int64_t low, high;
+	RF::toDataInt64( v, low, high );
+
+	jlong outCArray[] = { low, high };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 2 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
+	return outJNIArray;
+}
+
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_operation10( JNIEnv *env, jobject obj, jint order, jdouble dv, jint ope ){
+	R v, value = dv;
+	exeOperation2ArgsWithInt( v, ope, value, order );
+
+	int64_t low, high;
+	RF::toDataInt64( v, low, high );
+
+	jlong outCArray[] = { low, high };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 2 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
 	return outJNIArray;
 }
 

@@ -33,6 +33,8 @@ JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_operation5( JNIEnv *env, jobject obj
 JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_operation6( JNIEnv *env, jobject obj, jdouble dv, jint ope );
 JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_operation7( JNIEnv *env, jobject obj, jlong vLow, jlong vHigh, jint ope );
 JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_operation8( JNIEnv *env, jobject obj, jdouble dv, jint ope );
+JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_operation9( JNIEnv *env, jobject obj, jint order, jlong vLow, jlong vHigh, jint ope );
+JNIEXPORT jlongArray	JNICALL Java_edu_spl_R_operation10( JNIEnv *env, jobject obj, jint order, jdouble dv, jint ope );
 
 #ifdef __cplusplus
 }

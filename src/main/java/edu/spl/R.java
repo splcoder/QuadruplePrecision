@@ -683,7 +683,110 @@ public class R extends Number implements Comparable<R>, Serializable {
 		return new R( v[0], v[1] );
 	}
 	// Bessel functions ------------------------------------------------------------------------------------------------
+	public static R j0( R r ){	// Bessel function of the first kind, first order
+		long[] v = operation5( r.low, r.high, 27 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R j0( double r ){
+		long[] v = operation6( r, 27 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R j1( R r ){	// Bessel function of the first kind, second order
+		long[] v = operation5( r.low, r.high, 28 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R j1( double r ){
+		long[] v = operation6( r, 28 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	private static native long[] operation9( int order, long low, long high, int ope );
+	private static native long[] operation10( int order, double value, int ope );
+	public static R jn( int order, R r ){	// Bessel function of the first kind, n-th order
+		long[] v = operation9( order, r.low, r.high, 0 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R jn( int order, double r ){
+		long[] v = operation10( order, r, 0 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R y0( R r ){	// Bessel function of the second kind, first order
+		long[] v = operation5( r.low, r.high, 29 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R y0( double r ){
+		long[] v = operation6( r, 29 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R y1( R r ){	// Bessel function of the second kind, second order
+		long[] v = operation5( r.low, r.high, 30 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R y1( double r ){
+		long[] v = operation6( r, 30 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R yn( int order, R r ){	// Bessel function of the second kind, n-th order
+		long[] v = operation9( order, r.low, r.high, 1 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R yn( int order, double r ){
+		long[] v = operation10( order, r, 1 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
 	// Other functions -------------------------------------------------------------------------------------------------
+	public static R erf( R r ){		// Error function
+		long[] v = operation5( r.low, r.high, 31 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R erf( double r ){
+		long[] v = operation6( r, 31 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R erfc( R r ){		// Complementary Error function
+		long[] v = operation5( r.low, r.high, 32 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R erfc( double r ){
+		long[] v = operation6( r, 32 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R lgamma( R r ){		// logarithmic gamma function
+		long[] v = operation5( r.low, r.high, 33 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R lgamma( double r ){
+		long[] v = operation6( r, 33 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R tgamma( R r ){		// true gamma function
+		long[] v = operation5( r.low, r.high, 34 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	public static R tgamma( double r ){
+		long[] v = operation6( r, 34 );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[0], v[1] );
+	}
+	// Extra functions -------------------------------------------------------------------------------------------------
 	public static R sum( List<R> list ){
 		R res = ZERO;	// 0
 		int length = list.size();
@@ -698,5 +801,4 @@ public class R extends Number implements Comparable<R>, Serializable {
 		return res;
 	}
 	public static R product( Stream<R> stream ){ return stream.reduce( ONE, (a, b) -> a.mul( b ) ); }
-	// TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 }
