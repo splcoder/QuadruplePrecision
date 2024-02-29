@@ -125,7 +125,6 @@ Java_edu_spl_R_compare( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong
 	return 0;
 }
 
-// TODO new >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 JNIEXPORT jbyteArray JNICALL
 Java_edu_spl_R_toBytes( JNIEnv *env, jobject obj, jlong low, jlong high ){
 	R v = RF::fromDataInt64( low, high );
@@ -157,7 +156,6 @@ Java_edu_spl_R_fromBytesNat( JNIEnv *env, jobject obj, jbyteArray src ){
 	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
 	return outJNIArray;
 }
-// TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 void exeOperation2Args( R &out, jint ope, const R &lValue, const R &rValue ){
 	switch( ope ){
