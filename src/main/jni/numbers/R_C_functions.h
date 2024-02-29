@@ -64,6 +64,18 @@ public:
 		low  = ((int64_t*)(&value))[0];
 		high = ((int64_t*)(&value))[1];
 	}
+	//---
+	static int8_t* toBytes( const R &value, int8_t* pTo ){
+		int8_t *pCurrent = (int8_t *)(&value), *pLast = pCurrent + sizeof( value );
+		while( pCurrent < pLast )	*pTo++ = *pCurrent++;
+		return pTo;
+	}
+	static R fromBytes( int8_t* bytes ){
+		R value;
+		int8_t *pCurrent = (int8_t *)(&value), *pLast = pCurrent + sizeof( value );
+		while( pCurrent < pLast )	*pCurrent++ = *bytes++;
+		return value;
+	}
 	// Printing --------------------------------------------------------------------------------
 	static void print( const R &r, size_t prec = MAX_DIGIT_PREC ){
 		if( prec > MAX_DIGIT_PREC )   prec = MAX_DIGIT_PREC;

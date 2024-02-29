@@ -61,5 +61,13 @@ public class Main {
 				, (result1, result2) -> new Double[]{ Math.max( result1[0], result2[0] ), Math.min( result1[1], result2[1] ) }
 		);
 		System.out.println("Valor máximo: " + maxMinValues[0] + ", Valor mínimo: " + maxMinValues[1] );
+
+		System.out.println( "ENDED......................................................................................" );
+
+		byte[] byte_arr = R.toBytes( R.M_PI );
+		for( int i = 0; i < byte_arr.length; i++ ) System.out.print( byte_arr[ i ] + "," );
+		System.out.println();
+		R from = R.fromBytes( byte_arr );
+		System.out.println( "FROM: " + from );
 	}
 }

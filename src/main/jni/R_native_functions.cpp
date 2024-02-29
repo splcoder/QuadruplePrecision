@@ -125,6 +125,40 @@ Java_edu_spl_R_compare( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong
 	return 0;
 }
 
+// TODO new >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+JNIEXPORT jbyteArray JNICALL
+Java_edu_spl_R_toBytes( JNIEnv *env, jobject obj, jlong low, jlong high ){
+	R v = RF::fromDataInt64( low, high );
+
+	jbyte outCArray[ sizeof( R ) ];
+    RF::toBytes( v, outCArray );
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jbyteArray outJNIArray = env->NewByteArray( sizeof( R ) );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetByteArrayRegion( outJNIArray, 0 , sizeof( R ), outCArray );	// copy
+	return outJNIArray;
+}
+
+JNIEXPORT jlongArray JNICALL
+Java_edu_spl_R_fromBytesNat( JNIEnv *env, jobject obj, jbyteArray src ){
+	jbyte *pSrc = env->GetByteArrayElements( src, 0 );
+	R v = RF::fromBytes( pSrc );
+	env->ReleaseByteArrayElements( src, pSrc, 0 );
+
+	int64_t low, high;
+	RF::toDataInt64( v, low, high );
+
+	jlong outCArray[] = { low, high };
+
+	// Convert the C's Native jlong[] to JNI jlongarray, and return
+	jlongArray outJNIArray = env->NewLongArray( 2 );			// allocate
+	if( NULL == outJNIArray )	return NULL;
+	env->SetLongArrayRegion( outJNIArray, 0 , 2, outCArray );	// copy
+	return outJNIArray;
+}
+// TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 void exeOperation2Args( R &out, jint ope, const R &lValue, const R &rValue ){
 	switch( ope ){
 		case 0: out = lValue + rValue;					break;

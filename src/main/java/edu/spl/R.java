@@ -54,6 +54,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 	public static final R M_2_SQRTPI	= new R( 10, true );
 	public static final R M_SQRT2		= new R( 11, true );
 	public static final R M_1_SQRT2		= new R( 12, true );
+	public static final R M_1_SQRT2PI	= ONE.div( R.sqrt( M_PI.mul( 2 ) ) );
 
 	// Data ------------------------------------------------------------------------------------------------------------
 	private final long low, high;
@@ -95,6 +96,11 @@ public class R extends Number implements Comparable<R>, Serializable {
 	public static R valueOf( double value ){ return new R( value ); }
 	public static R valueOf( long value ){ return new R( value ); }
 	public static R valueOf( String value ){ return new R( value ); }
+	public static List<R> convert( Collection<Double> values ){
+		List<R> ret = new ArrayList<>( values.size() );
+		for( double v : values )	ret.add( new R( v ) );
+		return ret;
+	}
 	public static R random(){ return new R( random.nextLong(), random.nextLong() ); }
 
 	@Override
@@ -141,7 +147,22 @@ public class R extends Number implements Comparable<R>, Serializable {
 
 	// Save to file / Load from file -----------------------------------------------------------------------------------
 
-	// TODO toBytes, fromBytes <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	private static native byte[] toBytes( long low, long high );
+	private static native long[] fromBytesNat( byte[] bytes );
+	public static byte[] toBytes( R value ){ return toBytes( value.low, value.high ); }
+	public static R fromBytes( byte[] bytes ){
+		if( bytes.length != BYTES )	throw new IllegalArgumentException( "R.fromBytes: the length " + bytes.length + " is != " + BYTES );
+		long[] v	= fromBytesNat( bytes );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		return new R( v[ 0 ], v[ 1 ] );
+	}
+	public R( byte[] bytes ){
+		if( bytes.length != BYTES )	throw new IllegalArgumentException( "R( byte[] ) -> the length " + bytes.length + " is != " + BYTES );
+		long[] v	= fromBytesNat( bytes );
+		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
+		this.low	= v[ 0 ];
+		this.high	= v[ 1 ];
+	}
 
 	public static boolean save( List<R> c, String filename ){
 		try {
@@ -685,7 +706,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	// Mod, Max and Min functions ---------------------------------------------------------------------------------------------------
+	// Mod, Max and Min functions --------------------------------------------------------------------------------------
 	public static R max( R l, R r ){
 		long[] v = operation( l.low, l.high, r.low, r.high, 8 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
@@ -880,7 +901,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	// Extra functions -------------------------------------------------------------------------------------------------
+	// Stat functions --------------------------------------------------------------------------------------------------
 	public static R sum( R... list ){
 		R res = ZERO;
 		for( int i = 0; i < list.length; i++ )	res = res.add( list[ i ] );
@@ -1071,4 +1092,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 		return new R[]{ mean, sd };
 	}
 	public static R[] meanSD( Stream<R> stream ){ return meanSD( false, stream ); }
+	public static R distNormal( R x, R mean, R sd ){
+		return R.exp( x.sub( mean ).div( sd ).sqr().div( -2 ) ).mul( M_1_SQRT2PI ).div( sd );
+	}
 }
