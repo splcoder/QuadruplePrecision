@@ -37,6 +37,10 @@ public class Main {
 		System.out.println( "max: " + R.max( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ) ) );
 		System.out.println( "min: " + R.min( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ) ) );
 
+		double[] lst = new double[]{ 3, 5, 7, 6 };
+		R[] result = R.meanSD( lst );
+		System.out.println( "Mean-SD: " + result[0] + ", " + result[1] );
+
 		System.out.println( "ENDED...................." );
 	}
 }

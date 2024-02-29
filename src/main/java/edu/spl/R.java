@@ -141,6 +141,8 @@ public class R extends Number implements Comparable<R>, Serializable {
 
 	// Save to file / Load from file -----------------------------------------------------------------------------------
 
+	// TODO toBytes, fromBytes <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 	public static boolean save( List<R> c, String filename ){
 		try {
 			FileOutputStream fileOut = new FileOutputStream( filename );
@@ -916,27 +918,115 @@ public class R extends Number implements Comparable<R>, Serializable {
 	}
 	public static R product( Stream<R> stream ){ return stream.reduce( ONE, (a, b) -> a.mul( b ) ); }
 	public static R max( R... list ){
-		if( list.length == 0 )	return R.NAN;
+		if( list.length == 0 )	return R.INF_N;
 		R res = list[0];
 		for( int i = 1; i < list.length; i++ )	res = R.max( res, list[ i ] );
 		return res;
 	}
-	public static R min( R... list ){
-		if( list.length == 0 )	return R.NAN;
-		R res = list[0];
-		for( int i = 1; i < list.length; i++ )	res = R.min( res, list[ i ] );
+	public static R max( double... list ){
+		if( list.length == 0 )	return R.INF_N;
+		R res = new R( list[0] );
+		for( int i = 1; i < list.length; i++ )	res = R.max( res, list[ i ] );
 		return res;
 	}
 	public static R max( Collection<R> col ){
-		if( col.isEmpty() )	return R.NAN;
+		if( col.isEmpty() )	return R.INF_N;
 		R res = R.INF_N;
 		for( R r : col )	res = R.max( res, r );
 		return res;
 	}
+	public static R max( Stream<R> stream ){ return stream.reduce( R.INF_N, R::max ); }
+	public static R min( R... list ){
+		if( list.length == 0 )	return R.INF_P;
+		R res = list[0];
+		for( int i = 1; i < list.length; i++ )	res = R.min( res, list[ i ] );
+		return res;
+	}
+	public static R min( double... list ){
+		if( list.length == 0 )	return R.INF_P;
+		R res = new R( list[0] );
+		for( int i = 1; i < list.length; i++ )	res = R.min( res, list[ i ] );
+		return res;
+	}
 	public static R min( Collection<R> col ){
-		if( col.isEmpty() )	return R.NAN;
+		if( col.isEmpty() )	return R.INF_P;
 		R res = R.INF_P;
 		for( R r : col )	res = R.min( res, r );
 		return res;
 	}
+	public static R min( Stream<R> stream ){ return stream.reduce( R.INF_P, R::min ); }
+	public static R[] minMax( R... list ){
+		if( list.length == 0 )	return new R[]{ R.INF_P, R.INF_N };
+		R resMin = list[0], resMax = list[0];
+		for( int i = 1; i < list.length; i++ ){
+			resMin = R.min( resMin, list[ i ] );
+			resMax = R.max( resMax, list[ i ] );
+		}
+		return new R[]{ resMin, resMax };
+	}
+	public static R[] minMax( double... list ){
+		if( list.length == 0 )	return new R[]{ R.INF_P, R.INF_N };
+		R first = new R( list[0] );
+		R resMin = first, resMax = first;
+		for( int i = 1; i < list.length; i++ ){
+			resMin = R.min( resMin, list[ i ] );
+			resMax = R.max( resMax, list[ i ] );
+		}
+		return new R[]{ resMin, resMax };
+	}
+	public static R[] minMax( Collection<R> col ){
+		if( col.isEmpty() )	return new R[]{ R.INF_P, R.INF_N };
+		R resMin = R.INF_P, resMax = R.INF_N;
+		for( R r : col ){
+			resMin = R.min( resMin, r );
+			resMax = R.max( resMax, r );
+		}
+		return new R[]{ resMin, resMax };
+	}
+	public static R[] meanSD( boolean sample, R... list ){
+		if( list.length == 0 )	return new R[]{ R.NAN, R.NAN };
+		if( list.length == 1 )	return new R[]{ list[0], ZERO };
+		R aux, s = ZERO, s2 = ZERO;
+		for( int i = 0; i < list.length; i++ ){
+			aux = list[ i ];
+			s = s.add( aux );
+			s2 = s2.add( aux.mul( aux ) );
+		}
+		R mean = s.div( list.length );
+		R variance = s2.div( (sample ? list.length - 1 : list.length) ).sub( mean.sqr() );
+		return new R[]{ mean, R.sqrt( variance ) };
+	}
+	public static R[] meanSD( R... list ){ return meanSD( false, list ); }
+	public static R[] meanSD( boolean sample, double... list ){
+		if( list.length == 0 )	return new R[]{ R.NAN, R.NAN };
+		if( list.length == 1 )	return new R[]{ new R( list[0] ), ZERO };
+		R aux, s = ZERO, s2 = ZERO;
+		for( int i = 0; i < list.length; i++ ){
+			aux = new R( list[ i ] );
+			s = s.add( aux );
+			s2 = s2.add( aux.mul( aux ) );
+		}
+		R mean = s.div( list.length );
+		R variance = s2.div( (sample ? list.length - 1 : list.length) ).sub( mean.sqr() );
+		return new R[]{ mean, R.sqrt( variance ) };
+	}
+	public static R[] meanSD( double... list ){ return meanSD( false, list ); }
+	public static R[] meanSD( boolean sample, Collection<R> col ){
+		if( col.isEmpty() )	return new R[]{ R.NAN, R.NAN };
+		int size = col.size();
+		if( size == 1 ){
+			R inside = new R();
+			for( R r : col )	inside = r;
+			return new R[]{ inside, ZERO };
+		}
+		R s = ZERO, s2 = ZERO;
+		for( R r : col ){
+			s = s.add( r );
+			s2 = s2.add( r.mul( r ) );
+		}
+		R mean = s.div( size );
+		R variance = s2.div( (sample ? size - 1 : size) ).sub( mean.sqr() );
+		return new R[]{ mean, R.sqrt( variance ) };
+	}
+	public static R[] meanSD( Collection<R> col ){ return meanSD( false, col ); }
 }
