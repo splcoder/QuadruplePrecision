@@ -1093,6 +1093,6 @@ public class R extends Number implements Comparable<R>, Serializable {
 	}
 	public static R[] meanSD( Stream<R> stream ){ return meanSD( false, stream ); }
 	public static R distNormal( R x, R mean, R sd ){
-		return R.exp( x.sub( mean ).div( sd ).sqr().div( -2 ) ).mul( M_1_SQRT2PI ).div( sd );
+		return R.exp( x.sub( mean ).div( sd ).sqr().div( -2 ) ).mul( M_1_SQRT2PI ).div( sd );	// TODO improve
 	}
 }
