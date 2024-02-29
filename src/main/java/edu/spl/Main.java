@@ -23,11 +23,23 @@ public class Main {
 		R[] out = R.sinCos( 1 );
 		System.out.println( "sinCos(1): " + out[0] + ", " + out[1] );
 
-		Stream<R> stream = Stream.of( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ) );
+		Stream<R> stream = Stream.of( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ), R.valueOf( -1 ), R.valueOf( 20 ), R.valueOf( 11 ) );
 		//System.out.println( R.sum( stream ) );
-		System.out.println( R.product( stream ) );
-		System.out.println( R.product( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ) ) );
-		System.out.println( R.product( 3, 5, 6 ) );
+		System.out.println( "Stream product:   " + R.product( stream ) );
+		System.out.println( "Stream product 2: " + R.product( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ) ) );
+		System.out.println( "Stream product 3: " + R.product( 3, 5, 6 ) );
+
+		// stream has already been operated upon or closed
+		Stream<R> stream2 = Stream.of( R.valueOf( 3 ), R.valueOf( 5 ), R.valueOf( 6 ), R.valueOf( -1 ), R.valueOf( 20 ), R.valueOf( 11 ) );
+		R[] min_max = R.minMax( stream2 );
+		System.out.println( "Stream minMax: " + min_max[0] + ", " + min_max[1] );
+
+		R[] mean_sd = R.meanSD( 1, 2, 3, 4, 5 );
+		System.out.println( "Stream mean: " + mean_sd[0] + ", sd: " + mean_sd[1] );
+
+		Stream<R> stream3 = Stream.of( R.valueOf( 1 ), R.valueOf( 2 ), R.valueOf( 3 ), R.valueOf( 4 ), R.valueOf( 5 ) );
+		R[] mean_sd2 = R.meanSD( stream3 );
+		System.out.println( "Stream mean: " + mean_sd2[0] + ", sd: " + mean_sd2[1] );
 
 		out = R.modf( R.M_PI );
 		System.out.println( "Parts of PI: " + out[0] + ", " + out[1] );
@@ -41,6 +53,13 @@ public class Main {
 		R[] result = R.meanSD( lst );
 		System.out.println( "Mean-SD: " + result[0] + ", " + result[1] );
 
-		System.out.println( "ENDED...................." );
+		System.out.println( "ENDED......................................................................................" );
+
+		Stream<Double> doubleStream = Stream.of(1.5, 2.3, 4.6, 0.8, 3.2 );
+		Double[] maxMinValues = doubleStream.reduce( new Double[]{ Double.MIN_VALUE, Double.MAX_VALUE }
+				, (acc, val) -> new Double[]{ Math.max( acc[0], val ), Math.min( acc[1], val ) }
+				, (result1, result2) -> new Double[]{ Math.max( result1[0], result2[0] ), Math.min( result1[1], result2[1] ) }
+		);
+		System.out.println("Valor máximo: " + maxMinValues[0] + ", Valor mínimo: " + maxMinValues[1] );
 	}
 }

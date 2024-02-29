@@ -983,6 +983,12 @@ public class R extends Number implements Comparable<R>, Serializable {
 		}
 		return new R[]{ resMin, resMax };
 	}
+	public static R[] minMax( Stream<R> stream ){
+		return stream.reduce( new R[]{ R.INF_P, R.INF_N }							// Identity (initial value)
+				, (a, r) -> new R[]{ R.min( a[0], r ), R.max( a[1], r ) }			// Accumulator: a = array, r = Stream value
+				, (c, d) -> new R[]{ R.min( c[0], d[0] ), R.max( c[1], d[1] ) }		// Combiner for parallelization
+		);
+	}
 	public static R[] meanSD( boolean sample, R... list ){
 		if( list.length == 0 )	return new R[]{ R.NAN, R.NAN };
 		if( list.length == 1 )	return new R[]{ list[0], ZERO };
@@ -990,7 +996,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 		for( int i = 0; i < list.length; i++ ){
 			aux = list[ i ];
 			s = s.add( aux );
-			s2 = s2.add( aux.mul( aux ) );
+			s2 = s2.add( aux.sqr() );
 		}
 		R mean = s.div( list.length );
 		R variance = s2.div( (sample ? list.length - 1 : list.length) ).sub( mean.sqr() );
@@ -1004,7 +1010,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 		for( int i = 0; i < list.length; i++ ){
 			aux = new R( list[ i ] );
 			s = s.add( aux );
-			s2 = s2.add( aux.mul( aux ) );
+			s2 = s2.add( aux.sqr() );
 		}
 		R mean = s.div( list.length );
 		R variance = s2.div( (sample ? list.length - 1 : list.length) ).sub( mean.sqr() );
@@ -1013,8 +1019,8 @@ public class R extends Number implements Comparable<R>, Serializable {
 	public static R[] meanSD( double... list ){ return meanSD( false, list ); }
 	public static R[] meanSD( boolean sample, Collection<R> col ){
 		if( col.isEmpty() )	return new R[]{ R.NAN, R.NAN };
-		int size = col.size();
-		if( size == 1 ){
+		int length = col.size();
+		if( length == 1 ){
 			R inside = new R();
 			for( R r : col )	inside = r;
 			return new R[]{ inside, ZERO };
@@ -1022,11 +1028,47 @@ public class R extends Number implements Comparable<R>, Serializable {
 		R s = ZERO, s2 = ZERO;
 		for( R r : col ){
 			s = s.add( r );
-			s2 = s2.add( r.mul( r ) );
+			s2 = s2.add( r.sqr() );
 		}
-		R mean = s.div( size );
-		R variance = s2.div( (sample ? size - 1 : size) ).sub( mean.sqr() );
+		R mean = s.div( length );
+		R variance = s2.div( (sample ? length - 1 : length) ).sub( mean.sqr() );
 		return new R[]{ mean, R.sqrt( variance ) };
 	}
 	public static R[] meanSD( Collection<R> col ){ return meanSD( false, col ); }
+	private static class MeanSdAccumulator {
+		private long count;
+		private R sum, sumSquared;
+
+		public MeanSdAccumulator(){
+			count		= 0;
+			sum			= ZERO;
+			sumSquared	= ZERO;
+		}
+		public void accept( R value ){
+			count++;
+			sum = sum.add( value );
+			sumSquared = sumSquared.add( value.sqr() );
+		}
+		public MeanSdAccumulator combine( MeanSdAccumulator other ){
+			count += other.count;
+			sum = sum.add( other.sum );
+			sumSquared = sumSquared.add( other.sumSquared );
+			return this;
+		}
+		public long getCount(){ return count; }
+		public R getSum(){ return sum; }
+		public R getSumSquared(){ return sumSquared; }
+	}
+	public static R[] meanSD( boolean sample, Stream<R> stream ){
+		MeanSdAccumulator accumulator = stream.collect(
+				MeanSdAccumulator::new
+				, MeanSdAccumulator::accept
+				, MeanSdAccumulator::combine
+		);
+		R mean = accumulator.getSum().div( accumulator.getCount() );
+		R variance = accumulator.getSumSquared().div( (sample ? accumulator.getCount() - 1 : accumulator.getCount()) ).sub( mean.sqr() );
+		R sd = R.sqrt( variance );
+		return new R[]{ mean, sd };
+	}
+	public static R[] meanSD( Stream<R> stream ){ return meanSD( false, stream ); }
 }
