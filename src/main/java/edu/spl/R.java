@@ -1010,6 +1010,65 @@ public class R extends Number implements Comparable<R>, Serializable {
 				, (c, d) -> new R[]{ R.min( c[0], d[0] ), R.max( c[1], d[1] ) }		// Combiner for parallelization
 		);
 	}
+	public static R mean( R... list ){
+		if( list.length == 0 )	return ZERO;
+		R res = list[0];
+		for( int i = 1; i < list.length; i++ )	res = res.add( list[ i ] );
+		return res.div( list.length );
+	}
+	public static R mean( double... list ){
+		if( list.length == 0 )	return ZERO;
+		R res = new R( list[0] );
+		for( int i = 1; i < list.length; i++ )	res = res.add( list[ i ] );
+		return res.div( list.length );
+	}
+	public static R mean( Collection<R> col ){
+		if( col.isEmpty() )	return ZERO;
+		R res = ZERO;
+		for( R r : col )	res = res.add( r );
+		return res.div( col.size() );
+	}
+	public static R mean( Stream<R> stream ){
+		R sum = ZERO;
+		long counter = 0;
+		for( R r : (Iterable<R>)stream::iterator ){
+			sum.add( r );
+			counter++;
+		}
+		return counter > 0 ? sum.div( counter ) : ZERO;
+	}
+	public static R sd( boolean sample, R mean, R... list ){
+		if( list.length < 2 )	return ZERO;
+		R sum = ZERO;
+		for( int i = 0; i < list.length; i++ )	sum = sum.add( list[ i ].sub( mean ).sqr() );
+		return sample ? R.sqrt( sum.div( list.length - 1 ) ) : R.sqrt( sum.div( list.length ) );
+	}
+	public static R sd( R mean, R... list ){ return sd( false, mean, list ); }
+	public static R sd( boolean sample, double mean, double... list ){
+		if( list.length < 2 )	return ZERO;
+		R sum = ZERO;
+		for( int i = 0; i < list.length; i++ )	sum = sum.add( new R( list[ i ] ).sub( mean ).sqr() );
+		return sample ? R.sqrt( sum.div( list.length - 1 ) ) : R.sqrt( sum.div( list.length ) );
+	}
+	public static R sd( double mean, double... list ){ return sd( false, mean, list ); }
+	public static R sd( boolean sample, R mean, Collection<R> col ){
+		if( col.size() < 2 )	return ZERO;
+		R sum = ZERO;
+		for( R r : col )	sum = sum.add( r.sub( mean ).sqr() );
+		return sample ? R.sqrt( sum.div( col.size() - 1 ) ) : R.sqrt( sum.div( col.size() ) );
+	}
+	public static R sd( R mean, Collection<R> col ){ return sd( false, mean, col ); }
+	public static R sd( boolean sample, R mean, Stream<R> stream ){
+		R sum = ZERO;
+		long counter = 0;
+		for( R r : (Iterable<R>)stream::iterator ){
+			sum.add( r.sub( mean ).sqr() );
+			counter++;
+		}
+		if( counter < 2 )	return ZERO;
+		return sample ? R.sqrt( sum.div( counter - 1 ) ) : R.sqrt( sum.div( counter ) );
+	}
+	public static R sd( R mean, Stream<R> stream ){ return sd( false, mean, stream ); }
 	public static R[] meanSD( boolean sample, R... list ){
 		if( list.length == 0 )	return new R[]{ R.NAN, R.NAN };
 		if( list.length == 1 )	return new R[]{ list[0], ZERO };
