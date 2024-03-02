@@ -1115,42 +1115,88 @@ public class R extends Number implements Comparable<R>, Serializable {
 		return new R[]{ mean, R.sqrt( variance ) };
 	}
 	public static R[] meanSD( Collection<R> col ){ return meanSD( false, col ); }
-	private static class MeanSdAccumulator {
+	public static class SummaryStatistics {
 		private long count;
-		private R sum, sumSquared;
+		private R sum, sumSquared, min, max;
 
-		public MeanSdAccumulator(){
+		// Helpers
+		private R mean = null, variance = null, varianceSample = null;
+
+		public SummaryStatistics(){
 			count		= 0;
 			sum			= ZERO;
 			sumSquared	= ZERO;
+			min			= INF_P;
+			max			= INF_N;
 		}
 		public void accept( R value ){
 			count++;
-			sum = sum.add( value );
-			sumSquared = sumSquared.add( value.sqr() );
+			sum			= sum.add( value );
+			sumSquared	= sumSquared.add( value.sqr() );
+			min			= R.min( min, value );
+			max			= R.max( max, value );
 		}
-		public MeanSdAccumulator combine( MeanSdAccumulator other ){
-			count += other.count;
-			sum = sum.add( other.sum );
-			sumSquared = sumSquared.add( other.sumSquared );
+		public SummaryStatistics combine( SummaryStatistics other ){
+			count		+= other.count;
+			sum			= sum.add( other.sum );
+			sumSquared	= sumSquared.add( other.sumSquared );
+			min			= R.min( min, other.min );
+			max			= R.max( max, other.max );
 			return this;
 		}
 		public long getCount(){ return count; }
 		public R getSum(){ return sum; }
 		public R getSumSquared(){ return sumSquared; }
+		public R getMin(){ return min; }
+		public R getMax(){ return max; }
+		public R getMean(){
+			if( mean == null ){
+				mean = count == 0 ? ZERO : sum.div( count );
+			}
+			return mean;
+		}
+		public R getVariance( boolean sample ){
+			if( sample ){
+				if( varianceSample == null ){
+					if( count < 2 )	varianceSample = ZERO;
+					else{
+						R _mean = getMean();
+						varianceSample = sumSquared.div( count - 1 ).sub( _mean.sqr() );
+					}
+				}
+				return varianceSample;
+			}
+			if( variance == null ){
+				if( count < 2 )	variance = ZERO;
+				else{
+					R _mean = getMean();
+					variance = sumSquared.div( count ).sub( _mean.sqr() );
+				}
+			}
+			return variance;
+		}
+		public R getVariance(){ return getVariance( false ); }
+		public R getSD( boolean sample ){ return R.sqrt( getVariance( sample ) ); }
+		public R getSD(){ return R.sqrt( getVariance( false ) ); }
 	}
 	public static R[] meanSD( boolean sample, Stream<R> stream ){
-		MeanSdAccumulator accumulator = stream.collect(
-				MeanSdAccumulator::new
-				, MeanSdAccumulator::accept
-				, MeanSdAccumulator::combine
+		SummaryStatistics accumulator = stream.collect(
+				SummaryStatistics::new
+				, SummaryStatistics::accept
+				, SummaryStatistics::combine
 		);
-		R mean = accumulator.getSum().div( accumulator.getCount() );
-		R variance = accumulator.getSumSquared().div( (sample ? accumulator.getCount() - 1 : accumulator.getCount()) ).sub( mean.sqr() );
-		R sd = R.sqrt( variance );
+		R mean	= accumulator.getMean();
+		R sd	= accumulator.getSD( sample );
 		return new R[]{ mean, sd };
 	}
 	public static R[] meanSD( Stream<R> stream ){ return meanSD( false, stream ); }
+	public static SummaryStatistics getStatistics( Stream<R> stream ){
+		return stream.collect(
+				SummaryStatistics::new
+				, SummaryStatistics::accept
+				, SummaryStatistics::combine
+		);
+	}
 	public static R distNormal( R x, R mean, R sd ){
 		return R.exp( x.sub( mean ).div( sd ).sqr().div( -2 ) ).mul( M_1_SQRT2PI ).div( sd );	// TODO improve
 	}
