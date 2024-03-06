@@ -72,13 +72,6 @@ model {
                     exportedHeaders {
                         srcDir "src/main/jni/"
 						srcDir "src/main/jni/numbers/"
-                        // Añade la ruta de inclusión para jni.h
-                        //export "C:\\Not_Installed\\System\\jdk-21.0.2\\include"
-                        //export "C:\\Not_Installed\\System\\jdk-21.0.2\\include\\${targetPlatform.operatingSystem.getIncludeDir()}"
-                        //srcDir "C:\\msys64\\mingw64\\include"
-                        //srcDir "C:\\msys64\\mingw64\\include\\c++\\13.2.0"
-                        // Add compiler argument to include Java headers directory:
-                        //compilerArgs "-I${System.getProperty('java.home')}/include"
                     }
                 }
             }
