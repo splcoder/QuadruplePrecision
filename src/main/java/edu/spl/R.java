@@ -101,7 +101,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 		for( double v : values )	ret.add( new R( v ) );
 		return ret;
 	}
-	public static List<R> convert( Collection<String> values, boolean fromStrings ){
+	public static List<R> convert( List<String> values ){
 		List<R> ret = new ArrayList<>( values.size() );
 		for( String v : values )	ret.add( new R( v ) );
 		return ret;
