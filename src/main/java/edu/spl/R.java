@@ -36,8 +36,8 @@ public class R extends Number implements Comparable<R>, Serializable {
 	public static final R NAN			= new R( -6, true );
 	public static final R INF_P			= new R( -5, true );
 	public static final R INF_N			= new R( -4, true );
-	public static final R MAX			= new R( -3, true );
-	public static final R MIN			= new R( -2, true );
+	public static final R MAX			= new R( -3, true );	// largest finite number
+	public static final R MIN			= new R( -2, true );	// smallest positive number
 	public static final R PRECISION		= new R( -1, true );
 
 	// Math constants --------------------------------------------------------------------------------------------------
