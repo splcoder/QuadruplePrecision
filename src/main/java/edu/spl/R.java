@@ -213,6 +213,8 @@ public class R extends Number implements Comparable<R>, Serializable {
 	public boolean isInfP(){ return this.equals( R.INF_P ); }
 	public boolean isInfN(){ return this.equals( R.INF_N ); }
 	public boolean isFin(){ return ! (this.equals( R.NAN ) || this.equals( R.INF_P ) || this.equals( R.INF_N )); }
+	public boolean isZero(){ return low == 0 && high == 0; }
+	public boolean isNeg(){ return high < 0; }
 	public R neg(){ return this.mul( -1 ); }
 	public R sqr(){ return this.mul( this ); }
 
