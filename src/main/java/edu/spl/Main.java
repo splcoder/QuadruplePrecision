@@ -64,6 +64,11 @@ public class Main {
 
 		System.out.println( "ENDED......................................................................................" );
 
+		R rand = R.random();
+		System.out.println( "RANDOM: " + rand );
+
+		System.out.println( "ENDED......................................................................................" );
+
 		byte[] byte_arr = R.toBytes( R.M_PI );
 		for( int i = 0; i < byte_arr.length; i++ ) System.out.print( byte_arr[ i ] + "," );
 		System.out.println();

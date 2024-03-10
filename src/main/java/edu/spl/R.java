@@ -106,7 +106,16 @@ public class R extends Number implements Comparable<R>, Serializable {
 		for( String v : values )	ret.add( new R( v ) );
 		return ret;
 	}
-	public static R random(){ return new R( random.nextLong(), random.nextLong() ); }
+	public static R random(){
+		//return new R( random.nextLong(), random.nextLong() );
+		R base = new R( random.nextDouble() );
+		return new R( random.nextLong(), base.high );
+	}
+	public static R random( Random rand ){
+		//return new R( rand.nextLong(), rand.nextLong() );
+		R base = new R( rand.nextDouble() );
+		return new R( rand.nextLong(), base.high );
+	}
 
 	@Override
 	public int intValue(){ return (int)toLong( low, high ); }
