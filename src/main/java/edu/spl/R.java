@@ -116,7 +116,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 		R base = new R( rand.nextDouble() );
 		return new R( rand.nextLong(), base.high );
 	}
-
+	// Number methods --------------------------------------------------------------------------------------------------
 	@Override
 	public int intValue(){ return (int)toLong( low, high ); }
 
@@ -128,7 +128,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 
 	@Override
 	public double doubleValue(){ return toDouble( low, high ); }
-
+	//------------------------------------------------------------------------------------------------------------------
 	@Override
 	public String toString(){ return toStr( low, high, 0 ).trim(); }	// 0 = 33 digits ('all')
 	public String toString( int prec ){ return toStr( low, high, prec ).trim(); }
