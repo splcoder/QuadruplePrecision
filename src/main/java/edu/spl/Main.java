@@ -9,6 +9,7 @@ public class Main {
 			System.out.println( args[0] );
 		}
 		R r = new R( 3.141512345678910111213 );
+		System.out.println( r );
 		r = R.random();
 		r = R.M_PI;
 		R t = r.add( 0.15 );
@@ -74,5 +75,24 @@ public class Main {
 		System.out.println();
 		R from = R.fromBytes( byte_arr );
 		System.out.println( "FROM: " + from );
+		System.out.println( "ENDED......................................................................................" );
+
+		R toSum = R.M_PI;
+		long end, start = System.currentTimeMillis();
+		for( int i = 0; i < 1_000_000; i++ ){
+			toSum = toSum.addPRU( R.M_E );
+		}
+		end = System.currentTimeMillis();
+		System.out.println( "addPRU -> toSum: " + toSum + ", time: " + (end - start) );
+
+		toSum = R.M_PI;
+		start = System.currentTimeMillis();
+		for( int i = 0; i < 1_000_000; i++ ){
+			toSum = toSum.add( R.M_E );
+		}
+		end = System.currentTimeMillis();
+		System.out.println( "add    -> toSum: " + toSum + ", time: " + (end - start) );
+
+		System.out.println( "ENDED......................................................................................" );
 	}
 }

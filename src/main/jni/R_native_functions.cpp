@@ -175,6 +175,28 @@ void exeOperation2Args( R &out, jint ope, const R &lValue, const R &rValue ){
 	}
 }
 
+// TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// SLOWER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+JNIEXPORT jobject JNICALL
+Java_edu_spl_R_operationPRU( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong rLow, jlong rHigh, jint ope ){
+	R v, lv = RF::fromDataInt64( lLow, lHigh ), rv = RF::fromDataInt64( rLow, rHigh );
+	exeOperation2Args( v, ope, lv, rv );
+
+	int64_t low, high;
+	RF::toDataInt64( v, low, high );
+
+    jclass _R_class			= env->FindClass( "edu/spl/R" );
+    jfieldID _low_field		= env->GetFieldID( _R_class , "low", "J" );
+    jfieldID _high_field	= env->GetFieldID( _R_class , "high", "J" );
+
+	jobject new_R = env->AllocObject( _R_class );
+	env->SetLongField( new_R, _low_field,  low );
+	env->SetLongField( new_R, _high_field, high );
+
+	return new_R;
+}
+// SLOWER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 JNIEXPORT jlongArray JNICALL
 Java_edu_spl_R_operation( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong rLow, jlong rHigh, jint ope ){
 	R v, lv = RF::fromDataInt64( lLow, lHigh ), rv = RF::fromDataInt64( rLow, rHigh );
