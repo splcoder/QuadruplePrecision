@@ -175,8 +175,8 @@ void exeOperation2Args( R &out, jint ope, const R &lValue, const R &rValue ){
 	}
 }
 
-// TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // SLOWER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//@Deprecated
 JNIEXPORT jobject JNICALL
 Java_edu_spl_R_operationPRU( JNIEnv *env, jobject obj, jlong lLow, jlong lHigh, jlong rLow, jlong rHigh, jint ope ){
 	R v, lv = RF::fromDataInt64( lLow, lHigh ), rv = RF::fromDataInt64( rLow, rHigh );

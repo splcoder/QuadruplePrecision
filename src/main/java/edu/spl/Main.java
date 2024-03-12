@@ -80,7 +80,7 @@ public class Main {
 		R toSum = R.M_PI;
 		long end, start = System.currentTimeMillis();
 		for( int i = 0; i < 1_000_000; i++ ){
-			toSum = toSum.addPRU( R.M_E );
+			toSum = toSum._add( R.M_E );
 		}
 		end = System.currentTimeMillis();
 		System.out.println( "addPRU -> toSum: " + toSum + ", time: " + (end - start) );

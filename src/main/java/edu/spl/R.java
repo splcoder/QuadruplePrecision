@@ -222,10 +222,10 @@ public class R extends Number implements Comparable<R>, Serializable {
 	private static native long[] operation( long lLow, long lHigh, long rLow, long rHigh, int ope );
 	private static native long[] operation2( long lLow, long lHigh, double right, int ope );
 
-	// TODO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 	// SLOWER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 	private static native R operationPRU( long lLow, long lHigh, long rLow, long rHigh, int ope );
-	public R addPRU( R r ){ return operationPRU( this.low, this.high, r.low, r.high, 0 ); }
+	@Deprecated
+	public R _add( R r ){ return operationPRU( this.low, this.high, r.low, r.high, 0 ); }
 	// SLOWER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 	public R add( R r ){
