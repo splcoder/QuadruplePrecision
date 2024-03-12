@@ -821,64 +821,64 @@ public class R extends Number implements Comparable<R>, Serializable {
 		return new R[]{ new R( v[0], v[1] ), new R( v[2], v[3] ) };
 	}
 	// Bessel functions ------------------------------------------------------------------------------------------------
-	public static R j0( R r ){	// Bessel function of the first kind, first order
+	public static R besselj0( R r ){	// Bessel function of the first kind, first order
 		long[] v = operation5( r.low, r.high, 27 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R j0( double r ){
+	public static R besselj0( double r ){
 		long[] v = operation6( r, 27 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R j1( R r ){	// Bessel function of the first kind, second order
+	public static R besselj1( R r ){	// Bessel function of the first kind, second order
 		long[] v = operation5( r.low, r.high, 28 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R j1( double r ){
+	public static R besselj1( double r ){
 		long[] v = operation6( r, 28 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
 	private static native long[] operation9( int order, long low, long high, int ope );
 	private static native long[] operation10( int order, double value, int ope );
-	public static R jn( int order, R r ){	// Bessel function of the first kind, n-th order
+	public static R besseljn( int order, R r ){	// Bessel function of the first kind, n-th order
 		long[] v = operation9( order, r.low, r.high, 0 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R jn( int order, double r ){
+	public static R besseljn( int order, double r ){
 		long[] v = operation10( order, r, 0 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R y0( R r ){	// Bessel function of the second kind, first order
+	public static R bessely0( R r ){	// Bessel function of the second kind, first order
 		long[] v = operation5( r.low, r.high, 29 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R y0( double r ){
+	public static R bessely0( double r ){
 		long[] v = operation6( r, 29 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R y1( R r ){	// Bessel function of the second kind, second order
+	public static R bessely1( R r ){	// Bessel function of the second kind, second order
 		long[] v = operation5( r.low, r.high, 30 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R y1( double r ){
+	public static R bessely1( double r ){
 		long[] v = operation6( r, 30 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R yn( int order, R r ){	// Bessel function of the second kind, n-th order
+	public static R besselyn( int order, R r ){	// Bessel function of the second kind, n-th order
 		long[] v = operation9( order, r.low, r.high, 1 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
 	}
-	public static R yn( int order, double r ){
+	public static R besselyn( int order, double r ){
 		long[] v = operation10( order, r, 1 );
 		if( v == null )		throw new RuntimeException( "R -> the native array could not be allocated" );
 		return new R( v[0], v[1] );
