@@ -942,7 +942,8 @@ public class R extends Number implements Comparable<R>, Serializable {
 		}
 		return res;
 	}
-	public static R sum( Stream<R> stream ){ return stream.reduce( ZERO, (a, b) -> a.add( b ) ); }
+	public static R sum( Stream<R> stream, boolean parallel ){ return parallel ? stream.parallel().reduce( ZERO, (a, b) -> a.add( b ) ): stream.reduce( ZERO, (a, b) -> a.add( b ) ); }
+	public static R sum( Stream<R> stream ){ return sum( stream, false ); }
 	public static R product( R... list ){
 		R res = ONE;
 		for( int i = 0; i < list.length; i++ )	res = res.mul( list[ i ] );
@@ -960,7 +961,8 @@ public class R extends Number implements Comparable<R>, Serializable {
 		}
 		return res;
 	}
-	public static R product( Stream<R> stream ){ return stream.reduce( ONE, (a, b) -> a.mul( b ) ); }
+	public static R product( Stream<R> stream, boolean parallel ){ return parallel ? stream.parallel().reduce( ONE, (a, b) -> a.mul( b ) ) : stream.reduce( ONE, (a, b) -> a.mul( b ) ); }
+	public static R product( Stream<R> stream ){ return product( stream, false ); }
 	public static R max( R... list ){
 		if( list.length == 0 )	return R.INF_N;
 		R res = list[0];
@@ -979,7 +981,8 @@ public class R extends Number implements Comparable<R>, Serializable {
 		for( R r : col )	res = R.max( res, r );
 		return res;
 	}
-	public static R max( Stream<R> stream ){ return stream.reduce( R.INF_N, R::max ); }
+	public static R max( Stream<R> stream, boolean parallel ){ return parallel ? stream.parallel().reduce( R.INF_N, R::max ) : stream.reduce( R.INF_N, R::max ); }
+	public static R max( Stream<R> stream ){ return max( stream, false ); }
 	public static R min( R... list ){
 		if( list.length == 0 )	return R.INF_P;
 		R res = list[0];
@@ -998,7 +1001,8 @@ public class R extends Number implements Comparable<R>, Serializable {
 		for( R r : col )	res = R.min( res, r );
 		return res;
 	}
-	public static R min( Stream<R> stream ){ return stream.reduce( R.INF_P, R::min ); }
+	public static R min( Stream<R> stream, boolean parallel ){ return parallel ? stream.parallel().reduce( R.INF_P, R::min ) : stream.reduce( R.INF_P, R::min ); }
+	public static R min( Stream<R> stream ){ return min( stream, false ); }
 	public static R[] minMax( R... list ){
 		if( list.length == 0 )	return new R[]{ R.INF_P, R.INF_N };
 		R resMin = list[0], resMax = list[0];
@@ -1027,12 +1031,19 @@ public class R extends Number implements Comparable<R>, Serializable {
 		}
 		return new R[]{ resMin, resMax };
 	}
-	public static R[] minMax( Stream<R> stream ){
-		return stream.reduce( new R[]{ R.INF_P, R.INF_N }							// Identity (initial value)
+	public static R[] minMax( Stream<R> stream, boolean parallel ){
+		return parallel ?
+			stream.parallel().reduce( new R[]{ R.INF_P, R.INF_N }					// Identity (initial value)
 				, (a, r) -> new R[]{ R.min( a[0], r ), R.max( a[1], r ) }			// Accumulator: a = array, r = Stream value
 				, (c, d) -> new R[]{ R.min( c[0], d[0] ), R.max( c[1], d[1] ) }		// Combiner for parallelization
+			)
+			:
+			stream.reduce( new R[]{ R.INF_P, R.INF_N }								// Identity (initial value)
+			, (a, r) -> new R[]{ R.min( a[0], r ), R.max( a[1], r ) }				// Accumulator: a = array, r = Stream value
+			, (c, d) -> new R[]{ R.min( c[0], d[0] ), R.max( c[1], d[1] ) }			// Combiner for parallelization
 		);
 	}
+	public static R[] minMax( Stream<R> stream ){ return minMax( stream, false ); }
 	public static R mean( R... list ){
 		if( list.length == 0 )	return ZERO;
 		R res = list[0];
@@ -1051,7 +1062,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 		for( R r : col )	res = res.add( r );
 		return res.div( col.size() );
 	}
-	public static R mean( Stream<R> stream ){
+	public static R mean( Stream<R> stream ){	// TODO improve for parallel
 		R sum = ZERO;
 		long counter = 0;
 		for( R r : (Iterable<R>)stream::iterator ){
@@ -1081,7 +1092,7 @@ public class R extends Number implements Comparable<R>, Serializable {
 		return sample ? R.sqrt( sum.div( col.size() - 1 ) ) : R.sqrt( sum.div( col.size() ) );
 	}
 	public static R sd( R mean, Collection<R> col ){ return sd( false, mean, col ); }
-	public static R sd( boolean sample, R mean, Stream<R> stream ){
+	public static R sd( boolean sample, R mean, Stream<R> stream ){	// TODO improve for parallel
 		R sum = ZERO;
 		long counter = 0;
 		for( R r : (Iterable<R>)stream::iterator ){
@@ -1202,8 +1213,15 @@ public class R extends Number implements Comparable<R>, Serializable {
 		public R getSD( boolean sample ){ return R.sqrt( getVariance( sample ) ); }
 		public R getSD(){ return R.sqrt( getVariance( false ) ); }
 	}
-	public static R[] meanSD( boolean sample, Stream<R> stream ){
-		SummaryStatistics accumulator = stream.collect(
+	public static R[] meanSD( boolean sample, Stream<R> stream, boolean parallel ){
+		SummaryStatistics accumulator = parallel ?
+			stream.parallel().collect(
+				SummaryStatistics::new
+				, SummaryStatistics::accept
+				, SummaryStatistics::combine
+			)
+			:
+			stream.collect(
 				SummaryStatistics::new
 				, SummaryStatistics::accept
 				, SummaryStatistics::combine
@@ -1212,14 +1230,24 @@ public class R extends Number implements Comparable<R>, Serializable {
 		R sd	= accumulator.getSD( sample );
 		return new R[]{ mean, sd };
 	}
-	public static R[] meanSD( Stream<R> stream ){ return meanSD( false, stream ); }
-	public static SummaryStatistics getStatistics( Stream<R> stream ){
-		return stream.collect(
+	public static R[] meanSD( boolean sample, Stream<R> stream ){ return meanSD( sample, stream, false ); }
+	public static R[] meanSD( Stream<R> stream, boolean parallel ){ return meanSD( false, stream, parallel ); }
+	public static R[] meanSD( Stream<R> stream ){ return meanSD( false, stream, false ); }
+	public static SummaryStatistics getStatistics( Stream<R> stream, boolean parallel ){
+		return parallel ?
+			stream.parallel().collect(
+				SummaryStatistics::new
+				, SummaryStatistics::accept
+				, SummaryStatistics::combine
+			)
+			:
+			stream.collect(
 				SummaryStatistics::new
 				, SummaryStatistics::accept
 				, SummaryStatistics::combine
 		);
 	}
+	public static SummaryStatistics getStatistics( Stream<R> stream ){ return getStatistics( stream, false ); }
 	public static R distNormal( R x, R mean, R sd ){
 		return R.exp( x.sub( mean ).div( sd ).sqr().div( -2 ) ).mul( M_1_SQRT2PI ).div( sd );	// TODO improve
 	}
