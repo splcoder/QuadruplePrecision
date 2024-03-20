@@ -1212,6 +1212,19 @@ public class R extends Number implements Comparable<R>, Serializable {
 		public R getVariance(){ return getVariance( false ); }
 		public R getSD( boolean sample ){ return R.sqrt( getVariance( sample ) ); }
 		public R getSD(){ return R.sqrt( getVariance( false ) ); }
+		@Override
+		public String toString(){
+			StringBuilder sb = new StringBuilder();
+			sb.append( "Count: " ).append( this.getCount() );
+			sb.append( ", Sum: " ).append( this.getSum() );
+			sb.append( ", Sum^2: " ).append( this.getSumSquared() );
+			sb.append( ", Min: " ).append( this.getMin() );
+			sb.append( ", Max: " ).append( this.getMax() );
+			sb.append( ", Mean: " ).append( this.getMean() );
+			sb.append( ", Variance: " ).append( this.getVariance() );
+			sb.append( ", SD: " ).append( this.getSD() );
+			return sb.toString();
+		}
 	}
 	public static R[] meanSD( boolean sample, Stream<R> stream, boolean parallel ){
 		SummaryStatistics accumulator = parallel ?

@@ -93,6 +93,13 @@ public class Main {
 		end = System.currentTimeMillis();
 		System.out.println( "add    -> toSum: " + toSum + ", time: " + (end - start) );
 
+		long tt = System.currentTimeMillis();
+		Stream<R> streamSS = Stream.iterate( R.ONE, n -> n.add( R.ONE ) ).limit( 1000000 );
+		R.SummaryStatistics ss = R.getStatistics( streamSS );
+		System.out.println( "SummaryStatistics:\n" + ss );
+		tt = System.currentTimeMillis() - tt;
+		System.out.println( "TIME: " + (tt/1000.) );
+
 		System.out.println( "ENDED......................................................................................" );
 	}
 }
