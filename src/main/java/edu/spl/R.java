@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * 		https://gcc.gnu.org/onlinedocs/libquadmath/
  */
 public class R extends Number implements Comparable<R>, Serializable {
-
+	private static final long serialVersionUID = 1L;
 	static {
 		//System.loadLibrary( "quadp" );
 		System.load("C:\\Users\\Sergio\\Desktop\\Cursos Certificacion\\Curso Java\\Projects\\QuadruplePrecision\\build\\libs\\quadp\\shared\\quadp.dll");
